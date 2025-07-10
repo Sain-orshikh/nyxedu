@@ -1,24 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NyxEdu - Educational Platform
+
+A modern educational platform built with Next.js 15, TypeScript, and Tailwind CSS.
+
+## Features
+
+- **Responsive Design**: Works perfectly on desktop and mobile devices
+- **Modern UI**: Clean, professional design with Tailwind CSS
+- **TypeScript Support**: Full type safety and better developer experience
+- **Fast Development**: Uses Turbopack for lightning-fast development builds
 
 ## Getting Started
 
-First, run the development server:
+This project uses **pnpm** as the package manager.
+
+### Prerequisites
+
+Make sure you have Node.js and pnpm installed on your system.
+
+### Installation
+
+1. Navigate to the project directory
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+### Development
+
+Run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `pnpm dev` - Start the development server with Turbopack
+- `pnpm build` - Build the application for production
+- `pnpm start` - Start the production server
+- `pnpm lint` - Run ESLint to check code quality
+
+## Project Structure
+
+```
+nyxedu/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx          # Homepage
+│   │   ├── layout.tsx        # Root layout
+│   │   └── globals.css       # Global styles
+│   └── components/
+│       ├── Navbar.tsx        # Navigation component
+│       ├── Footer.tsx        # Footer component
+│       └── index.ts          # Component exports
+├── public/                   # Static assets
+├── package.json             # Project dependencies
+├── tailwind.config.ts       # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript configuration
+└── .npmrc                  # pnpm configuration
+```
+
+## Built With
+
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type-safe JavaScript
+- **Tailwind CSS** - Utility-first CSS framework
+- **pnpm** - Fast, disk space efficient package manager
 
 ## Learn More
 
