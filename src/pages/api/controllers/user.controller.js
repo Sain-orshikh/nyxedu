@@ -1,9 +1,10 @@
+import connectMongoDB from "../db/connectMongoDB.js";
 import bcrypt from 'bcryptjs';
 import {v2 as cloudinary} from "cloudinary";
-
 import User from "../models/user.model.js";
 
 export const getUserProfile = async (req,res) => {
+    await connectMongoDB();
     const {username} = req.params;
 
     try{
@@ -18,6 +19,7 @@ export const getUserProfile = async (req,res) => {
 };
 
 export const getSuggestedUsers = async (req,res) => {
+    await connectMongoDB();
     try {
         const userId = req.user._id;
 
@@ -46,6 +48,7 @@ export const getSuggestedUsers = async (req,res) => {
 };
 
 export const updateUser = async (req, res) => {
+    await connectMongoDB();
 	const { username, email, currentPassword, newPassword, bio } = req.body;
 	let { profileImg, coverImg } = req.body;
 
@@ -115,6 +118,7 @@ export const updateUser = async (req, res) => {
 };
 
 export const followUnfollowUser = async (req, res) => {
+    await connectMongoDB();
 	try {
 		const { id } = req.params;
 		const userToModify = await User.findById(id);
