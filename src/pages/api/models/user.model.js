@@ -16,48 +16,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    profileImg:{
-        type: String,
-        default: "",
+    subjects: {
+        type: [String],
+        default: [],
     },
-    coverImg:{
-        type: String,
-        default: "",
-    },
-    bio:{
-        type: String,
-        default: "Hi!",
-    },
-    followers: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            default: []
-        }
-    ],
-    following: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            default: []
-        }
-    ],
-    blogs:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Blog",
-            default:[]
-        }
-    ],
-    likedBlogs:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Blog",
-            default:[]
-        }
-    ],
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
 },{timestamps: true});
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;

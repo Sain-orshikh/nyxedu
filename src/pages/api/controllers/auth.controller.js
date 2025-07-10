@@ -2,11 +2,13 @@ import connectMongoDB from "../db/connectMongoDB.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
+import { Resend } from 'resend';
+import crypto from 'crypto';
 
 export const signup = async (req,res) => {
     await connectMongoDB();
     try {
-        const {username, email, password, profileImg} = req.body;
+        const {username, email, password} = req.body;
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -34,8 +36,7 @@ export const signup = async (req,res) => {
         const newUser = new User({
             username,
             email,
-            password:hashedPassword,
-            profileImg: profileImg
+            password:hashedPassword
         })
 
         if (newUser){
@@ -46,8 +47,7 @@ export const signup = async (req,res) => {
                 _id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
-                profileImg: newUser.profileImg,
-                coverImg: newUser.coverImg,
+                subjects: newUser.subjects
             })
         }   else{
             res.status(400).json({ error: "Invalid user data" });
@@ -64,23 +64,27 @@ export const signup = async (req,res) => {
 export const login = async (req,res) => {
     await connectMongoDB();
     try {
-
-        const {username,password} = req.body;
-        const user = await User.findOne({username});
-        const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
-
-        if(!user || !isPasswordCorrect){
-            return res.status(400).json({error: "Invalid user credentials"})
+        const { identifier, password } = req.body; // 'identifier' can be username or email
+        let user;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(identifier)) {
+            user = await User.findOne({ email: identifier });
+        } else {
+            user = await User.findOne({ username: identifier });
         }
-
+        if (!user) {
+            return res.status(400).json({error: "Invalid user credentials1"});
+        }
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({error: "Invalid user credentials"});
+        }
         generateTokenAndSetCookie(user._id, res);
-
         res.status(200).json({
             _id: user._id,
             username: user.username,
             email: user.email,
-            profileImg: user.profileImg,
-            coverImg: user.coverImg,
+            subjects: user.subjects
         });
     }   
     catch(error) {
@@ -92,7 +96,8 @@ export const login = async (req,res) => {
 export const logout = async (req,res) => {
     await connectMongoDB();
     try {
-        res.cookie("jwt","",{maxAge:0})
+        // Clear the cookie using Set-Cookie header
+        res.setHeader('Set-Cookie', 'jwt=; Max-Age=0; Path=/; HttpOnly; SameSite=Strict;');
         res.status(200).json({message: "Logged out successfully"})
     }
     catch(error){
@@ -111,4 +116,51 @@ export const getMe = async (req,res) => {
         console.log("Error in getMe controller", error.message);
         res.status(500).json({ error: "Internal server error" });
     }
-}
+};
+
+export const forgotPassword = async (req, res) => {
+    await connectMongoDB();
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpire = Date.now() + 1000 * 60 * 60; // 1 hour
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = resetTokenExpire;
+    await user.save();
+    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+    try {
+        await resend.emails.send({
+            from: 'no-reply@nyxedu.com',
+            to: email,
+            subject: 'Reset your password',
+            html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link will expire in 1 hour.</p>`
+        });
+        res.status(200).json({ message: 'Reset email sent' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to send email' });
+    }
+};
+
+export const resetPassword = async (req, res) => {
+    await connectMongoDB();
+    const { email, token, newPassword } = req.body;
+    if (!email || !token || !newPassword) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    const user = await User.findOne({ email, resetPasswordToken: token });
+    if (!user || !user.resetPasswordExpire || user.resetPasswordExpire < Date.now()) {
+        return res.status(400).json({ error: 'Invalid or expired token' });
+    }
+    if (newPassword.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    res.status(200).json({ message: 'Password has been reset successfully' });
+};
