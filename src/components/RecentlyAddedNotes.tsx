@@ -22,14 +22,14 @@ const recentNotes = [
 ];
 
 const RecentlyAddedNotes = () => (
-  <section className="py-12">
-    <h2 className="text-3xl font-bold text-deepblue mb-8 text-center">Recently Added Notes</h2>
+  <section className="pt-24">
+    <h2 className="text-4xl font-bold text-deepblue mb-8 text-center">Recently Added Notes</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {recentNotes.map((note, idx) => (
-        <div key={idx} className="note-card">
+        <div key={idx} className="note-card border border-gray-200 bg-white rounded-xl p-6 shadow-sm flex flex-col">
           <span className="text-sm font-semibold bg-gold text-deepblue px-3 py-1 rounded-full self-start">{note.tag}</span>
           <h3 className="text-xl font-bold text-deepblue pt-2">{note.title}</h3>
-          <p className="text-gold text-sm flex-grow">{note.desc}</p>
+          <p className="text-sm flex-grow">{note.desc}</p>
           <a className="font-semibold text-deepblue hover:text-gold transition-colors self-end mt-4" href={note.href}>Read More →</a>
         </div>
       ))}

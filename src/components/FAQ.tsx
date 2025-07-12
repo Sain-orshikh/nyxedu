@@ -7,8 +7,8 @@ import { FiChevronDown } from 'react-icons/fi';
 
 const faqs = [
   {
-    question: 'What is StudyHub?',
-    answer: 'StudyHub is a collaborative online platform designed for Cambridge IGCSE, AS, and A Level students. We provide a space for students to share and access high-quality, peer-reviewed study notes to help them excel in their examinations.'
+    question: 'What is NYXedu?',
+    answer: 'NYXedu is a collaborative online platform designed for Cambridge IGCSE, AS, and A Level students. We provide a space for students to share and access high-quality, peer-reviewed study notes to help them excel in their examinations.'
   },
   {
     question: 'Are the study notes free?',
@@ -28,14 +28,14 @@ const FAQ = () => (
   <section className="py-20" id="faq">
     <div className="container mx-auto px-6">
       <h2 className="text-3xl font-bold text-deepblue mb-12 text-center">Frequently Asked Questions</h2>
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl mx-auto">
         {faqs.map((faq, idx) => (
-          <Accordion key={idx}>
-            <AccordionSummary expandIcon={<FiChevronDown size={24} />}>
-              <Typography className="text-xl font-semibold text-deepblue">{faq.question}</Typography>
+          <Accordion key={idx} className="!bg-transparent !shadow-none !border-b !border-gray-200">
+            <AccordionSummary expandIcon={<FiChevronDown size={24} />} className="">
+              <Typography className="text-deepblue font-bold" style={{ fontSize: '1.25rem' }}>{faq.question}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography className="text-gold leading-relaxed">{faq.answer}</Typography>
+              <Typography className="text-black leading-relaxed" style={{ fontSize: '1.25rem' }}>{faq.answer}</Typography>
             </AccordionDetails>
           </Accordion>
         ))}

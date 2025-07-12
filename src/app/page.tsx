@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
-import LevelSelector from '@/components/LevelSelector';
+import SubjectsSection from '@/components/SubjectsSection';
 import RecentlyAddedNotes from '@/components/RecentlyAddedNotes';
 import AboutUs from '@/components/AboutUs';
 import FAQ from '@/components/FAQ';
@@ -54,26 +52,12 @@ const recentNotes = [
 
 export default function Home() {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-[var(--background-color)] text-[var(--text-primary)]" style={{ fontFamily: 'Work Sans, sans-serif' }}>
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-gray-50">
       {/* Main */}
       <main className="container mx-auto flex-grow px-6 py-12">
         <Hero />
         {/* Subjects Section */}
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold mb-6 text-deepblue">Subjects</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {subjectList.igcse.map((subject) => (
-              <a
-                key={subject.code}
-                href={`/${subject.code}`}
-                className="block bg-white rounded-xl p-6 border border-gray-200 hover:border-gold transition-all duration-200 shadow-sm hover:shadow-lg text-deepblue font-semibold text-lg text-center cursor-pointer"
-              >
-                {subject.name}
-              </a>
-            ))}
-          </div>
-        </section>
-        <LevelSelector />
+        <SubjectsSection />
         <RecentlyAddedNotes />
         <AboutUs />
         <FAQ />
