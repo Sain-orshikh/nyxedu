@@ -3,9 +3,9 @@ import { protectRoute } from '../middleware/protectRoute';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    // /api/user/profile?username=USERNAME
-    const { username } = req.query;
-    req.params = { username };
+    // /api/user/profile?email=EMAIL
+    const { email } = req.query;
+    req.params = { email };
     await protectRoute(req, res, () => getUserProfile(req, res));
   } else if (req.method === 'PUT') {
     await protectRoute(req, res, () => updateUser(req, res));

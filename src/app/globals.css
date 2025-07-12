@@ -123,12 +123,13 @@
     box-shadow: 0 0 0 2px var(--deepblue);
   }
   .focus\:ring-gold:focus {
-    box-shadow: 0 0 0 2px var(--gold); }
+    box-shadow: 0 0 0 3px var(--gold), 0 0 #0000;
+  }
   .focus\:ring-deepblue:focus {
     box-shadow: 0 0 0 2px var(--deepblue);
   }
   .focus\:ring-gold:focus {
-    box-shadow: 0 0 0 2px var(--gold);
+    box-shadow: 0 0 0 3px var(--gold), 0 0 #0000;
   }
 }
 

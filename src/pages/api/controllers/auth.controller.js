@@ -8,22 +8,19 @@ import crypto from 'crypto';
 export const signup = async (req,res) => {
     await connectMongoDB();
     try {
-        const {username, email, password} = req.body;
+        const { email, password } = req.body;
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ error: "Invalid email format" });
         }
 
-        const existingUser = await User.findOne({ username });
-        if ( existingUser ){
-            return res.status(400).json({ error: "Username is already taken "});
-        }
+        // Username check removed
 
         const existingEmail = await User.findOne({ email });
-		if ( existingEmail ) {
-			return res.status(400).json({ error: "Email is already taken" });
-		}
+        if ( existingEmail ) {
+            return res.status(400).json({ error: "Email is already taken" });
+        }
 
         if(password.length < 6){
             return res.status(400).json({ error: "Password must be atleast 6 character long" });
@@ -34,7 +31,6 @@ export const signup = async (req,res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            username,
             email,
             password:hashedPassword
         })
@@ -45,7 +41,7 @@ export const signup = async (req,res) => {
 
             res.status(201).json({
                 _id: newUser._id,
-                username: newUser.username,
+                // username: newUser.username, (removed)
                 email: newUser.email,
                 subjects: newUser.subjects
             })
@@ -64,13 +60,11 @@ export const signup = async (req,res) => {
 export const login = async (req,res) => {
     await connectMongoDB();
     try {
-        const { identifier, password } = req.body; // 'identifier' can be username or email
-        let user;
+        const { email, password } = req.body;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailRegex.test(identifier)) {
-            user = await User.findOne({ email: identifier });
-        } else {
-            user = await User.findOne({ username: identifier });
+        let user = null;
+        if (emailRegex.test(email)) {
+            user = await User.findOne({ email });
         }
         if (!user) {
             return res.status(400).json({error: "Invalid user credentials1"});
@@ -82,16 +76,17 @@ export const login = async (req,res) => {
         generateTokenAndSetCookie(user._id, res);
         res.status(200).json({
             _id: user._id,
-            username: user.username,
+            // username: user.username, (removed)
             email: user.email,
             subjects: user.subjects
         });
-    }   
-    catch(error) {
+    }
+    catch (error) {
         console.log("Error in login controller", error.message);
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
 
 export const logout = async (req,res) => {
     await connectMongoDB();

@@ -43,7 +43,7 @@ export default function SubjectPage() {
   const subjectDisplay = subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white pt-12">
       {/* Header is global via layout.tsx */}
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white py-8">

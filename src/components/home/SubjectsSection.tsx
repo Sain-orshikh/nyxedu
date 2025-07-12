@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { subjects as subjectList } from '../data/subjects';
+import { subjects as subjectList } from '../../data/subjects';
 
 const levels = [
   { key: 'igcse', label: 'IGCSE' },

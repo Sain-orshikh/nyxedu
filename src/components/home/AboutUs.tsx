@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { teamMembers } from '../data/teamMembers';
+import { teamMembers } from '../../data/teamMembers';
 
 const founders = teamMembers.filter(m => m.role.toLowerCase() === 'founder');
 const lead = founders[0];
