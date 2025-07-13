@@ -11,6 +11,14 @@ const levels = [
 export default function SubjectsSection() {
   const [selectedLevel, setSelectedLevel] = useState('igcse');
 
+  const [authUser, setAuthUser] = React.useState<{ subjects: string[] } | null>(null);
+
+  React.useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setAuthUser(data && data.subjects ? data : null));
+  }, []);
+
   return (
     <section className="mt-24">
       <h2 className="text-4xl font-bold mb-6 text-deepblue text-center">
@@ -32,15 +40,18 @@ export default function SubjectsSection() {
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {selectedLevel === 'igcse' ? (
-          subjectList.igcse.map((subject) => (
-            <a
-              key={subject.code}
-              href={`/${subject.code}`}
-              className="block bg-white rounded-xl p-6 border border-gray-200 hover:border-gold transition-all duration-200 shadow-sm hover:shadow-lg text-deepblue font-semibold text-lg text-center cursor-pointer"
-            >
-              <TextEffect per="word" preset="fade">{subject.name}</TextEffect>
-            </a>
-          ))
+          subjectList.igcse.map((subject) => {
+            const isChosen = authUser?.subjects?.includes(subject.code);
+            return (
+              <a
+                key={subject.code}
+                href={`/${subject.code}`}
+                className={`block bg-white rounded-xl p-6 border transition-all duration-200 shadow-sm hover:shadow-lg text-deepblue font-semibold text-lg text-center cursor-pointer ${isChosen ? 'border-gold' : 'border-gray-200 hover:border-gold'}`}
+              >
+                <TextEffect per="word" preset="fade">{subject.name}</TextEffect>
+              </a>
+            );
+          })
         ) : (
           <div className="col-span-4 text-center text-deepblue font-semibold text-xl pb-6">
             <TextEffect per="word" preset="fade">

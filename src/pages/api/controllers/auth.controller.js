@@ -32,7 +32,9 @@ export const signup = async (req,res) => {
 
         const newUser = new User({
             email,
-            password:hashedPassword
+            password: hashedPassword,
+            subjects: [],
+            bookmarks: []
         })
 
         if (newUser){
@@ -41,9 +43,9 @@ export const signup = async (req,res) => {
 
             res.status(201).json({
                 _id: newUser._id,
-                // username: newUser.username, (removed)
                 email: newUser.email,
-                subjects: newUser.subjects
+                subjects: newUser.subjects,
+                bookmarks: newUser.bookmarks
             })
         }   else{
             res.status(400).json({ error: "Invalid user data" });
@@ -76,9 +78,9 @@ export const login = async (req,res) => {
         generateTokenAndSetCookie(user._id, res);
         res.status(200).json({
             _id: user._id,
-            // username: user.username, (removed)
             email: user.email,
-            subjects: user.subjects
+            subjects: user.subjects,
+            bookmarks: user.bookmarks || []
         });
     }
     catch (error) {

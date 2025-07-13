@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
+import NoteBookmarkIcon from '../../../components/common/NoteBookmarkIcon';
 import { useParams } from 'next/navigation';
 import { Breadcrumbs } from '@mui/material';
 import Link from 'next/link';
 import { notes as allNotes } from '../../../data/notes';
-import { Document, Page, pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.js';
-import { useState } from 'react';
+import { driveNotes } from '../../../data/driveNotes';
+import dynamic from 'next/dynamic';
+const PDFViewer = dynamic(() => import('../../../components/common/PDFViewer'), { ssr: false });
 
 interface Note {
   title: string;
@@ -17,23 +18,8 @@ interface Note {
   pdf?: string;
 }
 
-const recommendedNotes = [
-  {
-    title: 'Thermodynamics Notes',
-    author: 'Ethan Harper',
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCo6rH-8RHcfNKoydwxNK9aL86o6d1kp-jDnu-hn69zbA0uy4EnoRHN5Rk9gFNg4XtX9UIyEGUcYxTIIT_AZYJC2Hppq3gD0AMm5K4ul0pRaz2SbTmydbExyDP6YyJFJzN30rF-MK0n_skEc8uYPxgCbtOiGEea16oWXjc2MOOT2-pfJiI-b0PBhTdu_WS_D43cGnFlpqyP9Mr03tPr1JVNzhKtQ7WwZbXnj8sKQbODFAsheHYkckQKdFQ9U9Zi6x4G46hyQGbjF_j8',
-  },
-  {
-    title: 'Electromagnetism Notes',
-    author: 'Olivia Bennett',
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAZymBu-sUi1S2lPSEVPlEWUSfHO3B5l0Dde7j_5sBacSakFNdCu0TcBf8lnKP7AFF6nzC4sbMWwxPbR456EvWWeOjYLcXy5u9PvyystPIemMqGbCL6IH-3UxYPri5Q_X7BMDkd3C6_3ipv7c_wL6ey6Hubd5rnRCx3kRi2nWTuwmSmka3Du1GtNAPIVtTxcWo9bpSTrrj-_6YDdUl5-z-W90_n15_X18g71EW86_ot2Tp9HGOJRLofDytBMo2Xe267YY-67-CmF8i4',
-  },
-  {
-    title: 'Quantum Mechanics Notes',
-    author: 'Noah Thompson',
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAdFz2QDzcfB0cSPJrbdo8jAm8YhpJsPfYp9wctnsOPOOx70yoa61Ru3Idbt-KuYaAfTFIy5fYC_9rnE50ew0SaVEvjDYBMn4Sm7qOXOw8gfYRiL35rcyALvxMhRPJw5EMbrTG1s-Dhxi_f2JQYlLzmk8mmU7VDT8yq7zctcmzR7sE6EjFNORCiY4iLp3Iq2TGdz35bpistTum7oT-NpKm289tooj06Lz8UJrR__SOOnDRoMHTefGfO0Y02-bxEi3F8AnCPv8c_guto',
-  },
-];
+// ...existing code...
+import { getRecommendedNotes } from '../../../data/getRecommendedNotes';
 
 export default function NotePage() {
   const params = useParams();
@@ -45,6 +31,13 @@ export default function NotePage() {
   if (params?.note) {
     noteParam = Array.isArray(params.note) ? params.note[0] : params.note;
   }
+
+  // Get driveNote for current note
+  const driveNote = driveNotes.find(n => n.id === noteParam);
+  // For recommended notes
+  const recommendedNotes = driveNote
+    ? getRecommendedNotes(driveNote.id, driveNote.subject, driveNote.chapter)
+    : [];
 
   // Map code to subject key
   const codeToSubject: { [key: string]: string } = {
@@ -64,7 +57,10 @@ export default function NotePage() {
   const subjectKey = codeToSubject[subjectParam] || (typeof subjectParam === 'string' ? subjectParam.toLowerCase() : '');
   const subjectNotes: Note[] = (allNotes as Record<string, Note[]>)[subjectKey] || [];
   const noteObj = subjectNotes.find((n: Note) => typeof n.title === 'string' && typeof noteParam === 'string' && n.title.toLowerCase().includes(noteParam.toLowerCase()));
-  const pdfUrl = noteObj?.pdf || '';
+
+  // Try to get drive note by id (noteParam)
+  // driveNote already declared above
+  const pdfUrl = driveNote?.driveLink || noteObj?.pdf || '';
 
   const handlePrint = () => {
     const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
@@ -74,41 +70,48 @@ export default function NotePage() {
     }
   };
 
-  const [numPages, setNumPages] = useState<number | null>(null);
-
   return (
-    <main className="flex flex-1 gap-8 p-8 bg-[#fcfaf2] min-h-screen">
+    <main className="pt-24 flex flex-1 gap-8 p-8 bg-gray-50 min-h-screen">
       <div className="flex-1 flex flex-col gap-6">
         {/* Breadcrumbs */}
         <div className="mb-2">
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/subjects" className="hover:text-[var(--brand-yellow)] text-[var(--brand-blue)] text-sm font-medium">Subjects</Link>
-            <Link color="inherit" href={`/${subjectParam}`} className="hover:text-[var(--brand-yellow)] text-[var(--brand-blue)] text-sm font-medium">{subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1)}</Link>
-            <span className="font-semibold text-[var(--text-primary)] text-sm">{noteObj?.title || noteParam}</span>
+          <Breadcrumbs aria-label="breadcrumb" className="text-base font-semibold mb-2">
+            <Link
+              color="inherit"
+              href="/subjects"
+              className="hover:text-[#2a3c4a] text-[#0052CC] px-2 py-1 rounded transition-all duration-200 text-base font-semibold"
+              style={{ fontSize: '1.1rem' }}
+            >
+              Subjects
+            </Link>
+            <Link
+              color="inherit"
+              href={`/${subjectParam}`}
+              className="hover:text-[#2a3c4a] text-[#0052CC] px-2 py-1 rounded transition-all duration-200 text-base font-semibold"
+              style={{ fontSize: '1.1rem' }}
+            >
+              {subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1)}
+            </Link>
+            <span className="font-semibold text-[#2a3c4a] px-2 py-1 text-base" style={{ fontSize: '1.1rem' }}>{driveNote?.title || noteObj?.title || noteParam}</span>
           </Breadcrumbs>
         </div>
         {/* Note Title & Author */}
-        <h2 className="typography_h1">{noteObj?.title || noteParam}</h2>
-        <p className="typography_body mb-2">Uploaded by {noteObj?.author || 'Unknown'} · {noteObj?.date || ''}</p>
+        <h2 className="typography_h1">{driveNote?.title || noteObj?.title || noteParam}</h2>
+        <p className="typography_body mb-2">Uploaded by {driveNote?.author || noteObj?.author || 'Unknown'} · {driveNote?.date || noteObj?.date || ''}</p>
         {/* PDF Viewer */}
         <div className="pdf_viewer flex-grow flex items-center justify-center">
           {pdfUrl ? (
-            <div style={{ height: '80vh', overflowY: 'scroll', width: '100%' }}>
-              <Document
-                file={pdfUrl}
-                onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-                loading={<div className="text-center text-gray-500">Loading PDF...</div>}
-                error={<div className="text-center text-red-500">Failed to load PDF.</div>}
-              >
-                {numPages && Array.from(new Array(numPages), (el, index) => (
-                  <Page
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                    width={800}
-                  />
-                ))}
-              </Document>
-            </div>
+            driveNote ? (
+              <iframe
+                id="pdf-iframe"
+                src={pdfUrl.replace('/view?usp=drive_link', '/preview')}
+                title={driveNote.title}
+                style={{ width: '100%', height: '80vh', border: 'none' }}
+                allow="autoplay"
+              />
+            ) : (
+              <PDFViewer file={pdfUrl} />
+            )
           ) : (
             <div className="text-center text-gray-500">No PDF available for this note.</div>
           )}
@@ -120,60 +123,67 @@ export default function NotePage() {
           <div>
             <h3 className="typography_h2 mb-4">Actions</h3>
             <div className="space-y-3">
-              {pdfUrl && (
-                <a
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors"
-                  href={pdfUrl}
-                  download
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="material-symbols-outlined text-[var(--brand-blue)]">download</span>
-                    <span className="font-medium">Download</span>
-                  </div>
-                  <span className="material-symbols-outlined text-gray-400">chevron_right</span>
-                </a>
-              )}
-              {pdfUrl && (
+              {pdfUrl && driveNote && (
                 <button
-                  className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-100 transition-colors"
-                  onClick={handlePrint}
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="material-symbols-outlined text-[var(--brand-blue)]">print</span>
-                    <span className="font-medium">Print</span>
-                  </div>
-                  <span className="material-symbols-outlined text-gray-400">chevron_right</span>
-                </button>
-              )}
-              {pdfUrl && (
-                <button
-                  className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between w-full p-3 rounded-lg border border-[#2563eb] bg-white shadow hover:bg-[#f5faff] transition-colors"
                   onClick={() => {
-                    const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
-                    if (iframe) iframe.style.zoom = '1.2';
+                    // Try to force download from Google Drive
+                    const fileIdMatch = driveNote.driveLink.match(/\/d\/(.*?)\//);
+                    const fileId = fileIdMatch ? fileIdMatch[1] : null;
+                    if (fileId) {
+                      const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                      const a = document.createElement('a');
+                      a.href = downloadUrl;
+                      a.download = driveNote.title + '.pdf';
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    } else {
+                      window.open(driveNote.driveLink, '_blank');
+                    }
                   }}
+                  style={{ textDecoration: 'none' }}
                 >
                   <div className="flex items-center gap-4">
-                    <span className="material-symbols-outlined text-[var(--brand-blue)]">zoom_in</span>
-                    <span className="font-medium">Zoom</span>
+                    <span className="material-symbols-outlined text-[#2563eb]">download</span>
+                    <span className="font-medium">Download PDF</span>
                   </div>
-                  <span className="material-symbols-outlined text-gray-400">chevron_right</span>
                 </button>
+              )}
+              {pdfUrl && driveNote && (
+                <NoteBookmarkIcon noteId={driveNote.id} />
               )}
             </div>
           </div>
           <div>
             <h3 className="typography_h2 mb-4">Related Notes</h3>
             <div className="space-y-4">
-              {recommendedNotes.map((note, idx) => (
-                <a key={idx} className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-100 transition-colors" href="#">
-                  <img alt={note.title + ' Thumbnail'} className="size-16 rounded-md object-cover" src={note.img} />
-                  <div>
-                    <p className="font-semibold text-[var(--text-primary)]">{note.title}</p>
-                    <p className="text-sm text-[var(--text-secondary)]">by {note.author}</p>
-                  </div>
-                </a>
-              ))}
+              {recommendedNotes.length > 0 ? (
+                recommendedNotes.map((note, idx) => {
+                  const posterSrc = `/poster/${note.subject}-poster.webp`;
+                  return (
+                    <a
+                      key={idx}
+                      className="flex items-center gap-4 p-4 rounded-lg border border-gray-300 shadow hover:shadow-lg hover:border-gold transition-colors bg-white"
+                      href={`/${note.subjectCode}/${note.id}`}
+                    >
+                      <img
+                        src={posterSrc}
+                        alt={note.subject + ' poster'}
+                        className="w-16 h-16 object-cover rounded-md"
+                        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                      <div>
+                        <p className="font-semibold text-[var(--text-primary)]">{note.title}</p>
+                        <p className="text-sm text-[var(--text-secondary)]">by {note.author}</p>
+                        <p className="text-xs text-[var(--text-secondary)]">{note.subject.charAt(0).toUpperCase() + note.subject.slice(1)} · Chapter {note.chapter}</p>
+                      </div>
+                    </a>
+                  );
+                })
+              ) : (
+                <div className="text-gray-500">No related notes found.</div>
+              )}
             </div>
           </div>
         </div>

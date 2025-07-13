@@ -1,10 +1,13 @@
 'use client';
 
 import React from 'react';
+import NoteBookmarkIcon from '../../components/common/NoteBookmarkIcon';
 import { useParams } from 'next/navigation';
 import { notes as allNotes } from '../../data/notes';
+import { useAuthUser } from '../../hooks/useAuthUser';
 
 interface Note {
+  id?: string;
   title: string;
   content: string;
   author: string;
@@ -17,6 +20,7 @@ interface NotesBySubject {
 }
 
 export default function SubjectPage() {
+  const { data: authUser } = useAuthUser();
   const params = useParams();
   let code = '';
   if (params?.subject) {
@@ -39,14 +43,21 @@ export default function SubjectPage() {
   };
 
   const subjectKey = codeToSubject[code] || code.toLowerCase();
-  const subjectNotes: Note[] = (allNotes as NotesBySubject)[subjectKey] || [];
+  // Try to match notes with driveNotes for id
+  const { driveNotes } = require('../../data/driveNotes');
+  const rawNotes: Note[] = (allNotes as NotesBySubject)[subjectKey] || [];
+  const subjectNotes: Note[] = rawNotes.map(note => {
+    // Try to find a driveNote with matching title and subject
+    const match = driveNotes.find((dn: any) => dn.title === note.title && dn.subject === subjectKey);
+    return match ? { ...note, id: match.id } : note;
+  });
   const subjectDisplay = subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white pt-12">
+    <div className="min-h-screen flex flex-col bg-gray-50 pt-12">
       {/* Header is global via layout.tsx */}
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white py-8">
+        <div className="bg-gray-50 py-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold text-[#000033]">{subjectDisplay}</h1>
             <p className="text-base text-[#555566] mt-4">
@@ -61,7 +72,7 @@ export default function SubjectPage() {
                 <path clipRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" fillRule="evenodd"></path>
               </svg>
             </div>
-            <input className="form-input block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#ffd700] focus:border-[#ffd700] sm:text-sm" placeholder="Search notes..." type="search" />
+            <input className="form-input block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-1 focus:placeholder-gray-400 sm:text-sm" placeholder="Search notes..." type="search" />
           </div>
           <div className="flex gap-2">
             <select className="form-select rounded-lg border-gray-300 focus:ring-1 focus:ring-[#ffd700] focus:border-[#ffd700]">
@@ -78,21 +89,36 @@ export default function SubjectPage() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {subjectNotes.map((note, idx) => (
-            <a
-              key={idx}
-              href={`/${code}/${encodeURIComponent(note.title.toLowerCase().replace(/\s+/g, '-'))}`}
-              className="bg-white rounded-xl p-6 border border-[#f0f0f0] hover:border-gold hover:shadow-lg transition-shadow duration-300 block"
-            >
-              <h3 className="text-xl font-semibold mb-2 text-[#000033]">{note.title}</h3>
-              <p className="text-[#555566] text-sm mb-4">{note.content}</p>
-              <div className="flex items-center text-xs text-[#555566]">
-                <span>By {note.author}</span>
-                <span className="mx-2">•</span>
-                <span>{note.date}</span>
-              </div>
-            </a>
-          ))}
+          {subjectNotes.map((note, idx) => {
+            const noteLink = note.id
+              ? `/${code}/${note.id}`
+              : `/${code}/${encodeURIComponent(note.title.toLowerCase().replace(/\s+/g, '-'))}`;
+            return (
+              <a
+                key={idx}
+                href={noteLink}
+                className={`bg-white rounded-xl p-6 border border-gray-200 block shadow-md transition-shadow duration-300 hover:shadow-lg`}
+              >
+                <div className="flex items-center justify-between mb-2 relative">
+                  <h3 className="text-xl font-semibold text-[#000033]">{note.title}</h3>
+                  {note.id && (
+                    <span
+                      className="absolute top-0 right-0 z-10"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <NoteBookmarkIcon noteId={note.id} />
+                    </span>
+                  )}
+                </div>
+                <p className="text-[#555566] text-sm mb-4">{note.content}</p>
+                <div className="flex items-center text-xs text-[#555566]">
+                  <span>By {note.author}</span>
+                  <span className="mx-2">•</span>
+                  <span>{note.date}</span>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </main>
       {/* Footer is global via layout.tsx */}

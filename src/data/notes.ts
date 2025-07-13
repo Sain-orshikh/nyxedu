@@ -37,27 +37,8 @@ export const notes = {
       date: 'Aug 20, 2023',
     },
   ],
-  biology: [
-    {
-      title: 'biology-chp1',
-      content: 'Chapter 1 notes for Biology. Includes PDF for download/view.',
-      author: 'Sophia Carter',
-      date: 'Jul 11, 2025',
-      pdf: '/pdf/biology chp1.pdf',
-    },
-    {
-      title: 'Cell Structure',
-      content: 'Detailed notes on cell organelles and their functions.',
-      author: 'Alice Smith',
-      date: 'Sep 12, 2023',
-    },
-    {
-      title: 'Genetics',
-      content: 'An overview of Mendelian genetics and inheritance patterns.',
-      author: 'Bob Johnson',
-      date: 'Sep 8, 2023',
-    },
-  ],
+  biology: require('./driveNotes').driveNotes.filter((n: { subject: string }) => n.subject === 'biology'),
+  ict: require('./driveNotes').driveNotes.filter((n: { subject: string }) => n.subject === 'ict'),
   physics: [
     {
       title: 'Mechanics',
