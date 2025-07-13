@@ -7,7 +7,7 @@ const webDevEmail = teamMembers.find(m => m.role === 'Web Developer')?.email;
 export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 py-6 mt-12">
-      <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 w-full">
+      <div className="w-full mx-auto px-8 md:px-16 lg:px-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex flex-col gap-2 w-full md:w-auto">
           <p className="text-sm">&copy; 2025 NyxEdu. All rights reserved.</p>
           <div className="flex gap-4 mt-2">
