@@ -42,7 +42,6 @@ export default function SubjectsSection() {
         {selectedLevel === 'igcse' ? (
           subjectList.igcse.map((subject) => {
             const userCodes = Array.isArray(authUser?.subjects) ? authUser.subjects : [];
-            console.log('Checking user subject codes:', userCodes, 'against', subject.code);
             const isChosen = userCodes.includes(subject.code);
             return (
               <a

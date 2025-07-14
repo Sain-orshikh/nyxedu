@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { subjects } from '../../data/subjects';
-import { teamMembers } from '../../data/teamMembers';
 
 interface Subject {
   code: string;
@@ -39,8 +38,7 @@ export default function SubjectsPage() {
           <section key={level.key} className="mb-10">
             <h2 className="text-2xl font-semibold text-deepblue mb-4">{level.label}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {(allSubjects as any)[level.key].map((subject: Subject) => {
-                const authors = teamMembers.filter((member: { name: string; role: string }) => member.role !== 'Web Developer');
+              {allSubjects[level.key as keyof SubjectsByLevel].map((subject: Subject) => {
                 const isChosen = authUser?.subjects?.includes(subject.code);
                 return (
                   <a

@@ -7,7 +7,6 @@ import { useParams } from 'next/navigation';
 import { notes as allNotes } from '../../data/notes';
 import { driveNotes } from '../../data/driveNotes';
 import { teamMembers } from '../../data/teamMembers';
-import { useAuthUser } from '../../hooks/useAuthUser';
 
 interface Note {
   id?: string;
@@ -23,7 +22,6 @@ interface NotesBySubject {
 }
 
 export default function SubjectPage() {
-  const { data: authUser } = useAuthUser(); // authUser is not used, so remove
   const params = useParams();
   let code = '';
   if (params?.subject) {

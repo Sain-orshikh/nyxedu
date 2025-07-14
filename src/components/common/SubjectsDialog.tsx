@@ -25,7 +25,7 @@ const style = {
 };
 
 const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
-  const [userSubjects, setUserSubjects] = useState<any[]>([]);
+  const [userSubjects, setUserSubjects] = useState<Array<{ code: string; name?: string; description?: string } | string>>([]);
   const [loading, setLoading] = useState(false);
   const [removeMode, setRemoveMode] = useState(false);
   const [toRemove, setToRemove] = useState<string[]>([]);
@@ -95,25 +95,30 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
     }
   };
   // If userSubjects is an array of codes (strings), handle accordingly
+  const codes = userSubjects.length === 0
+    ? []
+    : userSubjects.map(s => typeof s === 'string' ? s : s.code);
+  const result = useSubjectNameByCode(codes);
   const subjectNamesResult = React.useMemo(() => {
-    if (userSubjects.length === 0) return [];
-    // If userSubjects is array of strings, use directly
-    const codes = typeof userSubjects[0] === 'string' ? userSubjects : userSubjects.map(s => s.code);
-    const result = useSubjectNameByCode(codes);
     if (!result) return [];
     return Array.isArray(result) ? result : [result];
-  }, [userSubjects]);
+  }, [result]);
 
   // If userSubjects is array of strings, build objects with code and name
-  const userSubjectsWithNames = typeof userSubjects[0] === 'string'
-    ? subjectNamesResult.map((subjectObj) => ({ code: subjectObj.code, name: subjectObj.name }))
-    : userSubjects.map((subj, idx) => {
-        const subjectObj = subjectNamesResult[idx];
-        return {
-          ...subj,
-          name: subjectObj ? subjectObj.name : subj.name || subj.code
-        };
-      });
+  const userSubjectsWithNames = userSubjects.map((subj, idx) => {
+    const subjectObj = subjectNamesResult[idx];
+    if (typeof subj === 'string') {
+      return {
+        code: subj,
+        name: subjectObj ? subjectObj.name : subj
+      };
+    } else {
+      return {
+        ...subj,
+        name: subjectObj ? subjectObj.name : subj.name || subj.code
+      };
+    }
+  });
       
   return (
     <Modal open={open} onClose={(_event, reason) => {
@@ -181,10 +186,7 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
               >
                 {staticSubjects
                   .filter(s => {
-                    if (typeof userSubjects[0] === 'string') {
-                      return !userSubjects.includes(s.code);
-                    }
-                    return !userSubjects.some(u => u.code === s.code);
+                    return !userSubjects.some(u => typeof u === 'string' ? u === s.code : u.code === s.code);
                   })
                   .map((subject, idx) => (
                     <MenuItem key={subject.code + '-' + idx} value={subject.code}>
@@ -225,7 +227,7 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {userSubjectsWithNames.map((subject, idx) => (
             <a
-              key={(subject.code || subject.id) + '-' + idx}
+              key={subject.code + '-' + idx}
               href={`/${subject.code}`}
               className="bg-white rounded-xl p-6 border border-gray-200 block shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer relative"
             >
