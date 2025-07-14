@@ -10,7 +10,7 @@ import FAQ from '@/components/home/FAQ';
 export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-gray-50">
-      <main className="container mx-auto flex-grow px-6 py-12">
+      <main className="container mx-auto flex-grow px-6 py-6 sm:py-12">
         <Hero />
         <SubjectsSection />
         <RecentlyAddedNotes />

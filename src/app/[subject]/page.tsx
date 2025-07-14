@@ -59,7 +59,7 @@ export default function SubjectPage() {
   const authors = teamMembers.filter((member: any) => member.role !== 'Web Developer');
 
   return (
-    <div className="min-h-screen flex flex-col pt-24 bg-gray-50">
+    <div className="min-h-screen flex flex-col pt-16 sm:pt-24 bg-gray-50">
       {/* Header is global via layout.tsx */}
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pb-4 bg-gray-50">
         <div className="py-8">
@@ -79,7 +79,7 @@ export default function SubjectPage() {
             </p>
           </div>
         </div>
-        <div className="mt-4 mb-6 flex flex-col sm:flex-row gap-4 items-center">
+        <div className="mt-4 mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="relative flex-grow w-full sm:w-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg aria-hidden="true" className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -88,7 +88,7 @@ export default function SubjectPage() {
             </div>
             <input className="form-input block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-1 focus:placeholder-gray-400 sm:text-sm" placeholder="Search notes..." type="search" />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 gap-y-4 w-full sm:flex-row sm:w-auto">
             <FormControl size="small" sx={{ minWidth: 120, backgroundColor: 'white' }}>
               <InputLabel id="topic-select-label">Topic</InputLabel>
               <Select labelId="topic-select-label" label="Topic" defaultValue="Topic">
