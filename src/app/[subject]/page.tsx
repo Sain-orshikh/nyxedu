@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Select, MenuItem, InputLabel, FormControl, Breadcrumbs, Link, Typography } from '@mui/material';
 import NoteBookmarkIcon from '../../components/common/NoteBookmarkIcon';
 import { useParams } from 'next/navigation';
 import { notes as allNotes } from '../../data/notes';
@@ -53,19 +54,32 @@ export default function SubjectPage() {
   });
   const subjectDisplay = subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1);
 
+  // Import teamMembers and filter out the Web Developer
+  const { teamMembers } = require('../../data/teamMembers');
+  const authors = teamMembers.filter((member: any) => member.role !== 'Web Developer');
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 pt-12">
+    <div className="min-h-screen flex flex-col pt-24 bg-gray-50">
       {/* Header is global via layout.tsx */}
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-gray-50 py-8">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pb-4 bg-gray-50">
+        <div className="py-8">
           <div className="max-w-3xl">
-            <h1 className="text-4xl font-bold text-[#000033]">{subjectDisplay}</h1>
+            <Breadcrumbs aria-label="breadcrumb" className="mb-4">
+              <Link color="inherit" href="/subjects" style={{ fontWeight: 500 }}>
+                Subjects
+              </Link>
+              <Typography color="text.primary" style={{ fontWeight: 600 }}>{subjectDisplay}</Typography>
+            </Breadcrumbs>
+            <div className="flex items-center gap-4 mt-4">
+              <h1 className="text-4xl font-bold text-[#000033]">{subjectDisplay}</h1>
+              <span className="bg-white border border-gray-300 rounded-lg px-3 py-1 text-base font-mono text-[#333]">{code}</span>
+            </div>
             <p className="text-base text-[#555566] mt-4">
-              Explore a comprehensive collection of student-contributed study notes for {subjectDisplay}, covering all topics and concepts within the Cambridge IGCSE, AS, and A Level syllabi. Filter and sort notes by topic, author, or date to find the resources that best suit your learning needs.
+              Browse notes, filter by topic or author, and find what you need for {subjectDisplay}.
             </p>
           </div>
         </div>
-        <div className="mt-8 mb-6 flex flex-col sm:flex-row gap-4 items-center">
+        <div className="mt-4 mb-6 flex flex-col sm:flex-row gap-4 items-center">
           <div className="relative flex-grow w-full sm:w-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg aria-hidden="true" className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -75,17 +89,30 @@ export default function SubjectPage() {
             <input className="form-input block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-1 focus:placeholder-gray-400 sm:text-sm" placeholder="Search notes..." type="search" />
           </div>
           <div className="flex gap-2">
-            <select className="form-select rounded-lg border-gray-300 focus:ring-1 focus:ring-[#ffd700] focus:border-[#ffd700]">
-              <option>Topic</option>
-            </select>
-            <select className="form-select rounded-lg border-gray-300 focus:ring-1 focus:ring-[#ffd700] focus:border-[#ffd700]">
-              <option>Author</option>
-            </select>
-            <select className="form-select rounded-lg border-gray-300 focus:ring-1 focus:ring-[#ffd700] focus:border-[#ffd700]">
-              <option>Sort by Date</option>
-              <option>Newest First</option>
-              <option>Oldest First</option>
-            </select>
+            <FormControl size="small" sx={{ minWidth: 120, backgroundColor: 'white' }}>
+              <InputLabel id="topic-select-label">Topic</InputLabel>
+              <Select labelId="topic-select-label" label="Topic" defaultValue="Topic">
+                <MenuItem value="Topic">Topic</MenuItem>
+                {/* Add dynamic topic options here if needed */}
+              </Select>
+            </FormControl>
+            <FormControl size="small" sx={{ minWidth: 120, backgroundColor: 'white' }}>
+              <InputLabel id="author-select-label">Author</InputLabel>
+              <Select labelId="author-select-label" label="Author" defaultValue="Author">
+                <MenuItem value="Author">Author</MenuItem>
+                {authors.map((author: any) => (
+                  <MenuItem key={author.name} value={author.name}>{author.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl size="small" sx={{ minWidth: 140, backgroundColor: 'white' }}>
+              <InputLabel id="sort-select-label">Sort by Date</InputLabel>
+              <Select labelId="sort-select-label" label="Sort by Date" defaultValue="Sort by Date">
+                <MenuItem value="Sort by Date">Sort by Date</MenuItem>
+                <MenuItem value="Newest First">Newest First</MenuItem>
+                <MenuItem value="Oldest First">Oldest First</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

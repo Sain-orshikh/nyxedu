@@ -218,37 +218,38 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
           </div>
         )}
         {loading ? (
-          <Typography variant="body1">Loading...</Typography>
-        ) : userSubjectsWithNames.length === 0 ? (
-          <Typography variant="body1" color="text.secondary">No subjects found.</Typography>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {userSubjectsWithNames.map((subject, idx) => (
-              <div
-                key={(subject.code || subject.id) + '-' + idx}
-                className="bg-white rounded-xl p-6 border border-gray-200 block shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer relative"
-              >
-                <div className="flex items-center justify-between mb-2 relative">
-                  <h3 className="text-xl font-semibold text-[#000033]">{subject.name || subject.code}</h3>
-                  {removeMode && (
-                    <button
-                      type="button"
-                      className={`absolute top-0 right-0 z-10 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-lg shadow focus:outline-none transition-all duration-200 cursor-pointer hover:bg-red-700 hover:scale-110`}
-                      onClick={() => setToRemove(prev => prev.includes(subject.code) ? prev : [...prev, subject.code])}
-                      style={{ right: '-12px', top: '-12px' }}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-                <p className="text-[#555566] text-sm mb-4">{subject.description || ''}</p>
-                <div className="flex items-center text-xs text-[#555566]">
-                  <span>Code: {subject.code}</span>
-                </div>
+        <Typography variant="body1">Loading...</Typography>
+      ) : userSubjectsWithNames.length === 0 ? (
+        <Typography variant="body1" color="text.secondary">No subjects found.</Typography>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {userSubjectsWithNames.map((subject, idx) => (
+            <a
+              key={(subject.code || subject.id) + '-' + idx}
+              href={`/${subject.code}`}
+              className="bg-white rounded-xl p-6 border border-gray-200 block shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer relative"
+            >
+              <div className="flex items-center justify-between mb-2 relative">
+                <h3 className="text-xl font-semibold text-[#000033]">{subject.name || subject.code}</h3>
+                {removeMode && (
+                  <button
+                    type="button"
+                    className={`absolute top-0 right-0 z-10 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-lg shadow focus:outline-none transition-all duration-200 cursor-pointer hover:bg-red-700 hover:scale-110`}
+                    onClick={e => { e.preventDefault(); setToRemove(prev => prev.includes(subject.code) ? prev : [...prev, subject.code]); }}
+                    style={{ right: '-12px', top: '-12px' }}
+                  >
+                    ×
+                  </button>
+                )}
               </div>
-            ))}
-          </div>
-        )}
+              <p className="text-[#555566] text-sm mb-4">{subject.description || ''}</p>
+              <div className="flex items-center text-xs text-[#555566]">
+                <span>Code: {subject.code}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
       </Box>
     </Modal>
   );
