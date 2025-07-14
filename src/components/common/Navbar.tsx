@@ -7,6 +7,8 @@ import AuthDialog from '@/components/auth/AuthDialog';
 import { useAuth } from '@/context/AuthContext';
 import { useAuth as useAuthMutation } from '@/hooks/useAuth';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import BookmarksDialog from '@/components/common/BookmarksDialog';
+import SubjectsDialog from '@/components/common/SubjectsDialog';
 import toast from 'react-hot-toast';
 import { FiUser } from "react-icons/fi";
 
@@ -32,6 +34,8 @@ const Navbar: React.FC = () => {
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [openBookmarks, setOpenBookmarks] = useState(false);
+  const [openSubjects, setOpenSubjects] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { openDialog } = useAuth();
   // Refetch authUser after login/signup/logout
@@ -104,7 +108,12 @@ const Navbar: React.FC = () => {
                 </button>
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 z-50">
-                    <ProfileDropdown onLogout={handleLogout} email={authUser?.email} />
+                    <ProfileDropdown
+                      onLogout={handleLogout}
+                      email={authUser?.email}
+                      onOpenBookmarks={() => setOpenBookmarks(true)}
+                      onOpenSubjects={() => setOpenSubjects(true)}
+                    />
                   </div>
                 )}
               </div>
@@ -144,7 +153,12 @@ const Navbar: React.FC = () => {
             ) : authUser ? (
               <div className="mt-2 w-full flex flex-col items-center">
                 {/* Removed user icon for mobile menu when authenticated */}
-                <ProfileDropdown onLogout={handleLogout} email={authUser?.email} />
+                <ProfileDropdown
+                  onLogout={handleLogout}
+                  email={authUser?.email}
+                  onOpenBookmarks={() => setOpenBookmarks(true)}
+                  onOpenSubjects={() => setOpenSubjects(true)}
+                />
               </div>
             ) : (
               <div className="w-full flex flex-col gap-2 items-center mt-2">
@@ -167,6 +181,8 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       )}
+        <BookmarksDialog open={openBookmarks} onClose={() => setOpenBookmarks(false)} />
+        <SubjectsDialog open={openSubjects} onClose={() => setOpenSubjects(false)} />
         <AuthDialog />
       </header>
     );

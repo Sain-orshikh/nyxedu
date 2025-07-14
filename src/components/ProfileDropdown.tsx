@@ -3,14 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaRegUserCircle, FaBookmark, FaBook, FaSignOutAlt } from 'react-icons/fa';
 import { MdOutlineExitToApp } from "react-icons/md";
 import BookmarksDialog from './common/BookmarksDialog';
+import SubjectsDialog from './common/SubjectsDialog';
 
 interface ProfileDropdownProps {
   onLogout: () => void;
   email?: string;
+  onOpenBookmarks: () => void;
+  onOpenSubjects: () => void;
 }
 
-const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onLogout, email }) => {
-  const [openBookmarks, setOpenBookmarks] = useState(false);
+const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onLogout, email, onOpenBookmarks, onOpenSubjects }) => {
   return (
     <>
       <AnimatePresence>
@@ -29,18 +31,19 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onLogout, email }) =>
           <button
             type="button"
             className="flex items-center gap-2 py-2 px-4 text-deepblue hover:bg-gray-100 rounded transition text-md w-full text-left cursor-pointer"
-            onClick={() => setOpenBookmarks(true)}
+            onClick={onOpenBookmarks}
           >
             <FaBookmark size={18} />
             Bookmarks
           </button>
-          <a
-            href="/subjects"
-            className="flex items-center gap-2 py-2 px-4 text-deepblue hover:bg-gray-100 rounded transition text-md"
+          <button
+            type="button"
+            className="flex items-center gap-2 py-2 px-4 text-deepblue hover:bg-gray-100 rounded transition text-md w-full text-left cursor-pointer"
+            onClick={onOpenSubjects}
           >
             <FaBook size={18} />
             Subjects
-          </a>
+          </button>
           <hr className="border-t border-gray-200 my-1 w-full" />
           <button
             className="flex items-center gap-2 w-full text-left py-2 px-4 text-red-600 hover:bg-gray-100 rounded transition-all duration-200 cursor-pointer text-md"
@@ -51,7 +54,6 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onLogout, email }) =>
           </button>
         </motion.div>
       </AnimatePresence>
-      <BookmarksDialog open={openBookmarks} onClose={() => setOpenBookmarks(false)} />
     </>
   );
 };
