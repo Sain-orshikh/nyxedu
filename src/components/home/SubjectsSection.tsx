@@ -41,7 +41,9 @@ export default function SubjectsSection() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {selectedLevel === 'igcse' ? (
           subjectList.igcse.map((subject) => {
-            const isChosen = authUser?.subjects?.includes(subject.code);
+            const userCodes = Array.isArray(authUser?.subjects) ? authUser.subjects : [];
+            console.log('Checking user subject codes:', userCodes, 'against', subject.code);
+            const isChosen = userCodes.includes(subject.code);
             return (
               <a
                 key={subject.code}

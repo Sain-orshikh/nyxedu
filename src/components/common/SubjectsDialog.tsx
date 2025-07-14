@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, FormControl, InputLabel, Select, MenuItem, OutlinedInput } from '@mui/material';
 import { IoClose } from 'react-icons/io5';
 import { subjects as allSubjectsData } from '../../data/subjects';
+import { useSubjectNameByCode } from '../../hooks/useSubjectNameByCode';
 
 interface SubjectsDialogProps {
   open: boolean;
@@ -29,11 +30,20 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
   const [removeMode, setRemoveMode] = useState(false);
   const [toRemove, setToRemove] = useState<string[]>([]);
   const [addDropdownOpen, setAddDropdownOpen] = useState(false);
-  const [selectedAdd, setSelectedAdd] = useState('');
+  const [selectedAdd, setSelectedAdd] = useState<string[]>([]);
+  // Use static subjects as base
+  const staticSubjects: { code: string; name: string; description?: string }[] = Array.isArray(allSubjectsData)
+    ? allSubjectsData
+    : [
+        ...(allSubjectsData.igcse ?? []),
+        ...(allSubjectsData.as ?? []),
+        ...(allSubjectsData.alevel ?? [])
+      ];
 
   useEffect(() => {
     if (open) {
       setLoading(true);
+      // Fetch user's subjects only
       fetch('/api/user/subjects')
         .then(res => res.json())
         .then(data => {
@@ -43,30 +53,68 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
     }
   }, [open]);
 
-  // Add subject handler (placeholder)
-  // Flatten allSubjectsData to a single array
-  const flatSubjects: { code: string; name: string; description?: string }[] = [
-    ...((allSubjectsData.igcse ?? []) as any[]),
-    ...((allSubjectsData.as ?? []) as any[]),
-    ...((allSubjectsData.alevel ?? []) as any[])
-  ];
-
-  const handleAddSubject = () => {
-    if (!selectedAdd) return;
-    // Simulate add
-    const found = flatSubjects.find((s: { code: string }) => s.code === selectedAdd);
-    if (found) setUserSubjects([...userSubjects, found]);
-    setAddDropdownOpen(false);
-    setSelectedAdd('');
+  // Add subject handler (API)
+  const handleAddSubject = async () => {
+    if (!selectedAdd.length) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/user/addSubjects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subjects: selectedAdd })
+      });
+      const data = await res.json();
+      if (Array.isArray(data.subjects)) {
+        setUserSubjects(data.subjects);
+      }
+    } finally {
+      setLoading(false);
+      setAddDropdownOpen(false);
+      setSelectedAdd([]);
+    }
   };
 
-  // Remove subject handler (placeholder)
-  const handleConfirmRemove = () => {
-    setUserSubjects(userSubjects.filter(s => !toRemove.includes(s.code)));
-    setToRemove([]);
-    setRemoveMode(false);
+  // Remove subject handler (API)
+  const handleConfirmRemove = async () => {
+    if (!toRemove.length) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/user/removeSubjects', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subjects: toRemove })
+      });
+      const data = await res.json();
+      if (Array.isArray(data.subjects)) {
+        setUserSubjects(data.subjects);
+      }
+    } finally {
+      setLoading(false);
+      setToRemove([]);
+      setRemoveMode(false);
+    }
   };
+  // If userSubjects is an array of codes (strings), handle accordingly
+  const subjectNamesResult = React.useMemo(() => {
+    if (userSubjects.length === 0) return [];
+    // If userSubjects is array of strings, use directly
+    const codes = typeof userSubjects[0] === 'string' ? userSubjects : userSubjects.map(s => s.code);
+    const result = useSubjectNameByCode(codes);
+    if (!result) return [];
+    return Array.isArray(result) ? result : [result];
+  }, [userSubjects]);
 
+  // If userSubjects is array of strings, build objects with code and name
+  const userSubjectsWithNames = typeof userSubjects[0] === 'string'
+    ? subjectNamesResult.map((subjectObj) => ({ code: subjectObj.code, name: subjectObj.name }))
+    : userSubjects.map((subj, idx) => {
+        const subjectObj = subjectNamesResult[idx];
+        return {
+          ...subj,
+          name: subjectObj ? subjectObj.name : subj.name || subj.code
+        };
+      });
+      
   return (
     <Modal open={open} onClose={(_event, reason) => {
       if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
@@ -78,16 +126,27 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
             Your Subjects
           </Typography>
           <div className="flex gap-2">
+            {!addDropdownOpen ? (
+              <button
+                type="button"
+                className="w-24 rounded-xl border-2 border-green-500 text-green-500 font-bold text-sm bg-transparent hover:bg-green-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                onClick={() => setAddDropdownOpen(true)}
+              >
+                Add
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="w-24 rounded-xl border-2 border-green-500 text-green-500 font-bold text-sm bg-transparent hover:bg-green-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                onClick={handleAddSubject}
+                disabled={selectedAdd.length === 0}
+              >
+                Confirm
+              </button>
+            )}
             <button
               type="button"
-              className="px-3 py-1 rounded bg-gold text-deepblue font-bold text-sm hover:opacity-80 focus:outline-none"
-              onClick={() => setAddDropdownOpen(v => !v)}
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              className={`px-3 py-1 rounded bg-red-100 text-red-700 font-bold text-sm hover:opacity-80 focus:outline-none ${removeMode ? 'ring-2 ring-red-400' : ''}`}
+              className={`w-24 rounded-xl border-2 border-red-500 text-red-500 font-bold text-sm bg-transparent hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer ${removeMode ? 'ring-2 ring-red-400' : ''}`}
               onClick={() => setRemoveMode(v => !v)}
             >
               Remove
@@ -100,62 +159,81 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
         {/* Add dropdown */}
         {addDropdownOpen && (
           <div className="mb-4 flex gap-2 items-center">
-            <select
-              value={selectedAdd}
-              onChange={e => setSelectedAdd(e.target.value)}
-              className="px-2 py-1 rounded border border-gray-300 text-deepblue"
-            >
-              <option value="">Select subject...</option>
-              {flatSubjects.filter(s => !userSubjects.some(u => u.code === s.code)).map(subject => (
-                <option key={subject.code} value={subject.code}>{subject.name}</option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="px-3 py-1 rounded bg-gold text-deepblue font-bold text-sm hover:opacity-80 focus:outline-none"
-              onClick={handleAddSubject}
-            >
-              Add Subject
-            </button>
+            <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+              <InputLabel id="add-multi-subject-label">Select Subjects</InputLabel>
+              <Select
+                labelId="add-multi-subject-label"
+                id="add-multi-subject"
+                multiple
+                value={selectedAdd}
+                onChange={e => {
+                  const value = e.target.value;
+                  setSelectedAdd(typeof value === 'string' ? value.split(',') : value);
+                }}
+                input={<OutlinedInput label="Select Subjects" />}
+                renderValue={selected =>
+                  staticSubjects
+                    .filter(s => selected.includes(s.code))
+                    .map(s => `${s.name} (${s.code})`)
+                    .join(', ')
+                }
+                MenuProps={{ PaperProps: { style: { maxHeight: 48 * 4.5 + 8, width: 250 } } }}
+              >
+                {staticSubjects
+                  .filter(s => {
+                    if (typeof userSubjects[0] === 'string') {
+                      return !userSubjects.includes(s.code);
+                    }
+                    return !userSubjects.some(u => u.code === s.code);
+                  })
+                  .map((subject, idx) => (
+                    <MenuItem key={subject.code + '-' + idx} value={subject.code}>
+                      {subject.name} ({subject.code})
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
           </div>
         )}
         {/* Remove confirmation */}
         {removeMode && toRemove.length > 0 && (
-          <div className="mb-4 flex gap-2 items-center">
+          <div className="mb-4 flex flex-col gap-2 items-start">
             <span className="text-red-600 font-semibold">Selected for removal: {toRemove.length}</span>
-            <button
-              type="button"
-              className="px-3 py-1 rounded bg-red-600 text-white font-bold text-sm hover:opacity-80 focus:outline-none"
-              onClick={handleConfirmRemove}
-            >
-              Confirm Remove
-            </button>
-            <button
-              type="button"
-              className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold text-sm hover:opacity-80 focus:outline-none"
-              onClick={() => { setToRemove([]); setRemoveMode(false); }}
-            >
-              Cancel
-            </button>
+            <div className="flex gap-2 mt-2">
+              <button
+                type="button"
+                className="w-24 rounded-xl border-2 py-3 border-red-500 text-red-500 font-bold text-sm bg-transparent hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                onClick={handleConfirmRemove}
+              >
+                Confirm
+              </button>
+              <button
+                type="button"
+                className="w-24 rounded-xl border-2 py-3 border-gray-400 text-gray-700 font-bold text-sm bg-transparent hover:bg-gray-400 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                onClick={() => { setToRemove([]); setRemoveMode(false); }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
         {loading ? (
           <Typography variant="body1">Loading...</Typography>
-        ) : userSubjects.length === 0 ? (
+        ) : userSubjectsWithNames.length === 0 ? (
           <Typography variant="body1" color="text.secondary">No subjects found.</Typography>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {userSubjects.map(subject => (
+            {userSubjectsWithNames.map((subject, idx) => (
               <div
-                key={subject.code || subject.id}
+                key={(subject.code || subject.id) + '-' + idx}
                 className="bg-white rounded-xl p-6 border border-gray-200 block shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer relative"
               >
                 <div className="flex items-center justify-between mb-2 relative">
-                  <h3 className="text-xl font-semibold text-[#000033]">{subject.name}</h3>
+                  <h3 className="text-xl font-semibold text-[#000033]">{subject.name || subject.code}</h3>
                   {removeMode && (
                     <button
                       type="button"
-                      className={`absolute top-0 right-0 z-10 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-lg shadow hover:bg-red-700 transition-all duration-200 focus:outline-none`}
+                      className={`absolute top-0 right-0 z-10 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-lg shadow focus:outline-none transition-all duration-200 cursor-pointer hover:bg-red-700 hover:scale-110`}
                       onClick={() => setToRemove(prev => prev.includes(subject.code) ? prev : [...prev, subject.code])}
                       style={{ right: '-12px', top: '-12px' }}
                     >
