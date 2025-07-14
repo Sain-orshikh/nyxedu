@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Select, MenuItem, InputLabel, FormControl, Breadcrumbs, Link, Typography } from '@mui/material';
 import NoteBookmarkIcon from '../../components/common/NoteBookmarkIcon';
 import { useParams } from 'next/navigation';
 import { notes as allNotes } from '../../data/notes';
+import { driveNotes } from '../../data/driveNotes';
+import { teamMembers } from '../../data/teamMembers';
 import { useAuthUser } from '../../hooks/useAuthUser';
 
 interface Note {
@@ -21,7 +23,7 @@ interface NotesBySubject {
 }
 
 export default function SubjectPage() {
-  const { data: authUser } = useAuthUser();
+  const { data: authUser } = useAuthUser(); // authUser is not used, so remove
   const params = useParams();
   let code = '';
   if (params?.subject) {
@@ -45,18 +47,16 @@ export default function SubjectPage() {
 
   const subjectKey = codeToSubject[code] || code.toLowerCase();
   // Try to match notes with driveNotes for id
-  const { driveNotes } = require('../../data/driveNotes');
   const rawNotes: Note[] = (allNotes as NotesBySubject)[subjectKey] || [];
   const subjectNotes: Note[] = rawNotes.map(note => {
     // Try to find a driveNote with matching title and subject
-    const match = driveNotes.find((dn: any) => dn.title === note.title && dn.subject === subjectKey);
+    const match = driveNotes.find((dn: { title: string; subject: string; id: string }) => dn.title === note.title && dn.subject === subjectKey);
     return match ? { ...note, id: match.id } : note;
   });
   const subjectDisplay = subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1);
 
   // Import teamMembers and filter out the Web Developer
-  const { teamMembers } = require('../../data/teamMembers');
-  const authors = teamMembers.filter((member: any) => member.role !== 'Web Developer');
+  const authors = teamMembers.filter((member: { name: string; role: string }) => member.role !== 'Web Developer');
 
   return (
     <div className="min-h-screen flex flex-col pt-16 sm:pt-24 bg-gray-50">
@@ -100,7 +100,7 @@ export default function SubjectPage() {
               <InputLabel id="author-select-label">Author</InputLabel>
               <Select labelId="author-select-label" label="Author" defaultValue="Author">
                 <MenuItem value="Author">Author</MenuItem>
-                {authors.map((author: any) => (
+                {authors.map((author) => (
                   <MenuItem key={author.name} value={author.name}>{author.name}</MenuItem>
                 ))}
               </Select>

@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaRegUserCircle, FaBookmark, FaBook, FaSignOutAlt } from 'react-icons/fa';
+import { FaRegUserCircle, FaBookmark, FaBook } from 'react-icons/fa';
 import { MdOutlineExitToApp } from "react-icons/md";
-import BookmarksDialog from './common/BookmarksDialog';
-import SubjectsDialog from './common/SubjectsDialog';
 
 interface ProfileDropdownProps {
   onLogout: () => void;

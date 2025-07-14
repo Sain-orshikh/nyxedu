@@ -21,7 +21,6 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
   onSignUp 
 }) => {
   const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
   const [formData, setFormData] = useState({
     emailOrPhone: '',
     password: '',

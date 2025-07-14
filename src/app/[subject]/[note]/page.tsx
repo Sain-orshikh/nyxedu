@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import NoteBookmarkIcon from '../../../components/common/NoteBookmarkIcon';
 import { useParams } from 'next/navigation';
 import { Breadcrumbs, Typography } from '@mui/material';
@@ -62,13 +63,7 @@ export default function NotePage() {
   // driveNote already declared above
   const pdfUrl = driveNote?.driveLink || noteObj?.pdf || '';
 
-  const handlePrint = () => {
-    const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
-    if (iframe) {
-      iframe.contentWindow?.focus();
-      iframe.contentWindow?.print();
-    }
-  };
+  // handlePrint removed (unused)
 
   return (
     <main className="pt-16 sm:pt-24 min-h-screen bg-gray-50">
@@ -168,9 +163,11 @@ export default function NotePage() {
                         href={`/${note.subjectCode}/${note.id}`}
                       >
                         <div className="w-16 h-20 flex-shrink-0 rounded-md bg-gray-200 overflow-hidden border border-gray-300">
-                          <img
+                          <Image
                             src={posterSrc}
                             alt={note.subject + ' poster'}
+                            width={64}
+                            height={80}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
                           />

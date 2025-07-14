@@ -37,7 +37,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ noteId }) => {
         const data = await res.json();
         toast.error(data?.error || 'Failed to update bookmark.');
       }
-    } catch (err) {
+    } catch {
       toast.error('Network error. Please try again.');
     }
     setLoading(false);

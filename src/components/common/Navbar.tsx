@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect, useRef } from 'react';
 import AuthDialog from '@/components/auth/AuthDialog';
@@ -50,7 +51,7 @@ const Navbar: React.FC = () => {
       await logout();
       handleAuthRefetch();
       toast.success('Logged out successfully');
-    } catch (err) {
+    } catch {
       toast.error('Logout failed');
     }
   };
@@ -75,7 +76,7 @@ const Navbar: React.FC = () => {
       <nav className="container mx-auto flex items-center justify-between py-4">
         <div className="flex items-center gap-8 pl-6">
           <Link href="/" className="flex items-center gap-3 text-deepblue">
-            <img src="/logo.png" alt="NYXedu Logo" className="h-8 w-8" />
+            <Image src="/logo.png" alt="NYXedu Logo" width={32} height={32} className="h-8 w-8" />
             <h2 className="text-2xl font-bold">NYXedu</h2>
           </Link>
           {/* Removed Subjects link for desktop */}

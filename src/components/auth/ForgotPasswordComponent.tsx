@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Dialog } from '@mui/material';
-import { useAuth } from '@/hooks/useAuth';
+// Removed unused useAuth import
 import toast from 'react-hot-toast';
 
 interface ForgotPasswordDialogProps {
@@ -30,9 +30,9 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
         setSubmitting(false);
       }, 500);
       return;
-    } catch (err) {
-      // setError((err as Error)?.message || 'Failed to send email');
-      // toast.error(error || 'Failed to send email');
+    } catch {
+      // setError('Failed to send email');
+      // toast.error('Failed to send email');
     } finally {
       // setSubmitting(false);
     }
@@ -62,7 +62,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
       {success ? (
         <div className="space-y-6">
           <div className="text-green-600 text-center text-lg font-semibold">Password reset email sent!</div>
-          <div className="text-yellow-600 text-center text-sm">Check your spam folder if you don't see the email in your inbox.</div>
+          <div className="text-yellow-600 text-center text-sm">Check your spam folder if you don&apos;t see the email in your inbox.</div>
           <button
             type="button"
             className="w-full py-4 rounded-[12px] bg-gold text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-gold"

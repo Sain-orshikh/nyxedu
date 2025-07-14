@@ -1,3 +1,5 @@
+import { driveNotes } from './driveNotes';
+
 export const notes = {
   mathematics: [
     {
@@ -37,8 +39,8 @@ export const notes = {
       date: 'Aug 20, 2023',
     },
   ],
-  biology: require('./driveNotes').driveNotes.filter((n: { subject: string }) => n.subject === 'biology'),
-  ict: require('./driveNotes').driveNotes.filter((n: { subject: string }) => n.subject === 'ict'),
+  biology: driveNotes.filter((n: { subject: string }) => n.subject === 'biology'),
+  ict: driveNotes.filter((n: { subject: string }) => n.subject === 'ict'),
   physics: [
     {
       title: 'Mechanics',

@@ -15,10 +15,10 @@ const AboutUs = () => {
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-2/3 mx-auto text-center">
             <p className="text-lg text-deepblue leading-relaxed mb-8 font-medium">
-              NYXedu is a collaborative platform built by and for students, making high-quality study materials accessible to everyone. Our mission is to empower Cambridge learners worldwide to succeed by sharing notes, resources, and experiences in a supportive, student-driven community. Whether you're preparing for exams or looking to deepen your understanding, NYXedu is here to help you learn, grow, and connect.
+              NYXedu is a collaborative platform built by and for students, making high-quality study materials accessible to everyone. Our mission is to empower Cambridge learners worldwide to succeed by sharing notes, resources, and experiences in a supportive, student-driven community. Whether you&apos;re preparing for exams or looking to deepen your understanding, NYXedu is here to help you learn, grow, and connect.
             </p>
             <div className="flex flex-wrap justify-center gap-8 mb-6">
-              {founders.map((member, idx) => (
+              {founders.map((member) => (
                 <div key={member.name} className="flex flex-col items-center bg-white rounded-xl p-6 shadow-md w-64">
                   <div className="w-20 h-20 rounded-full bg-gold flex items-center justify-center mb-4 border-4 border-gold">
                     <span className="text-2xl font-bold text-deepblue">{member.name[0]}</span>
