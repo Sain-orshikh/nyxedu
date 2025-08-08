@@ -121,14 +121,14 @@ const Navbar: React.FC = () => {
             ) : (
               <>
                 <button
-                  className="button_primary cursor-pointer hover:opacity-80 transition-all duration-200 text-deepblue font-semibold"
+                  className="button_primary cursor-pointer hover:opacity-60 transition-all duration-200 text-deepblue font-semibold mr-2"
                   type="button"
                   onClick={() => openDialog('signup')}
                 >
                   Sign Up
                 </button>
                 <button
-                  className="text-deepblue bg-gold rounded-2xl py-2 hover:opacity-80 transition-all duration-200 font-semibold px-4 focus:outline-none cursor-pointer"
+                  className="text-deepblue bg-green-300 rounded-2xl py-2 hover:opacity-80 transition-all duration-200 font-semibold px-4 focus:outline-none cursor-pointer"
                   onClick={() => openDialog('signin')}
                   type="button"
                 >
@@ -171,7 +171,7 @@ const Navbar: React.FC = () => {
                   Sign Up
                 </button>
                 <button
-                  className="w-4/5 py-2 rounded-2xl font-semibold text-deepblue bg-gold hover:opacity-80 transition-all duration-200"
+                  className="w-4/5 py-2 rounded-2xl font-semibold text-deepblue bg-green-300 hover:opacity-80 transition-all duration-200"
                   onClick={() => openDialog('signin')}
                   type="button"
                 >

@@ -21,14 +21,14 @@ export default function SubjectsSection() {
 
   return (
     <section className="mt-24">
-      <h2 className="text-4xl font-bold mb-6 text-deepblue text-center">
+      <h2 className="text-4xl font-bold mb-6 text-green-900 text-center">
         <TextEffect per="word" preset="fade-in-blur">Choose Your Level</TextEffect>
       </h2>
       <div className="flex justify-center gap-4 mb-12">
         {levels.map((level) => (
           <button
             key={level.key}
-            className={`px-6 py-3 rounded-lg font-semibold border border-gray-200 text-deepblue transition-all duration-200 shadow-sm hover:shadow-lg cursor-pointer focus:outline-none focus:ring-gold ${selectedLevel === level.key ? 'bg-gold text-deepblue border-none' : 'bg-white'}`}
+            className={`px-6 py-3 rounded-lg font-semibold border border-gray-200 text-deepblue transition-all duration-200 shadow-sm hover:shadow-lg cursor-pointer focus:outline-none focus:ring-gold ${selectedLevel === level.key ? 'bg-green-300 text-deepblue border-none' : 'bg-white'}`}
             onClick={() => setSelectedLevel(level.key)}
           >
             <TextEffect per="word" preset="fade">{level.label}</TextEffect>

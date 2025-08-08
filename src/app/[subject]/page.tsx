@@ -57,19 +57,19 @@ export default function SubjectPage() {
   const authors = teamMembers.filter((member: { name: string; role: string }) => member.role !== 'Web Developer');
 
   return (
-    <div className="min-h-screen flex flex-col pt-16 sm:pt-24 bg-gray-50">
+    <div className="min-h-screen flex flex-col pt-16 sm:pt-24 " style={{backgroundColor: '#eafaf1'}}>
       {/* Header is global via layout.tsx */}
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pb-4 bg-gray-50">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pb-4 " style={{backgroundColor: '#eafaf1'}}>
         <div className="py-8">
           <div className="max-w-3xl">
             <Breadcrumbs aria-label="breadcrumb" className="mb-4">
-              <Link color="inherit" href="/subjects" style={{ fontWeight: 500 }}>
+              <Link color="inherit" href="/subjects" style={{ fontWeight: 500}}>
                 Subjects
               </Link>
               <Typography color="text.primary" style={{ fontWeight: 600 }}>{subjectDisplay}</Typography>
             </Breadcrumbs>
             <div className="flex items-center gap-4 mt-4">
-              <h1 className="text-4xl font-bold text-[#000033]">{subjectDisplay}</h1>
+              <h1 className="text-4xl font-bold text-[#000033] text-green-900">{subjectDisplay}</h1>
               <span className="bg-white border border-gray-300 rounded-lg px-3 py-1 text-base font-mono text-[#333]">{code}</span>
             </div>
             <p className="text-base text-[#555566] mt-4">

@@ -66,7 +66,7 @@ export default function NotePage() {
   // handlePrint removed (unused)
 
   return (
-    <main className="pt-16 sm:pt-24 min-h-screen bg-gray-50">
+    <main className="pt-16 sm:pt-24 min-h-screen" style={{ backgroundColor: '#eafaf1' }}>
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumbs Navigation */}
         <div className="mb-6">
@@ -85,7 +85,7 @@ export default function NotePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* PDF Section */}
           <div className="lg:col-span-2 flex flex-col h-full">
-            <div className="bg-gray-50 rounded-2xl px-0 sm:px-16 flex-1 flex flex-col">
+            <div className=" rounded-2xl px-0 sm:px-16 flex-1 flex flex-col" style={{ backgroundColor: '#eafaf1' }}>
               {/* PDF Viewer */}
               <div className="flex-1 bg-gray-200 rounded-xl flex items-center justify-center border-4 border-gray-300">
                 {pdfUrl ? (
@@ -123,7 +123,7 @@ export default function NotePage() {
                 {pdfUrl && driveNote && (
                   <div className="flex items-center justify-center gap-2">
                     <button
-                      className="flex items-center gap-2 h-11 px-4 text-sm font-medium rounded-lg bg-yellow-400 hover:bg-yellow-500 hover:opacity-80 transition-all duration-200 cursor-pointer w-full justify-center text-[var(--text-primary)]"
+                      className="flex items-center gap-2 h-11 px-4 text-sm font-medium rounded-lg bg-green-500 hover:bg-green-300 hover:opacity-80 transition-all duration-200 cursor-pointer w-full justify-center text-[var(--text-primary)]"
                       onClick={() => {
                         const fileIdMatch = driveNote.driveLink.match(/\/d\/(.*?)\//);
                         const fileId = fileIdMatch ? fileIdMatch[1] : null;
@@ -173,7 +173,7 @@ export default function NotePage() {
                           />
                         </div>
                         <div className="flex-1">
-                          <h4 className="text-md font-semibold text-[var(--text-primary)] group-hover:text-yellow-500 transition-colors">{note.title}</h4>
+                          <h4 className="text-md font-semibold text-[var(--text-primary)] group-hover:text-green-700 transition-colors">{note.title}</h4>
                           <p className="text-sm text-[var(--text-secondary)] mt-1">{note.content}</p>
                         </div>
                       </a>

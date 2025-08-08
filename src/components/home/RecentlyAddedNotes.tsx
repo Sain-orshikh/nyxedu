@@ -27,7 +27,7 @@ const RecentlyAddedNotes = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {recentNotes.map((note, idx) => (
         <div key={idx} className="note-card border border-gray-200 bg-white rounded-xl p-6 shadow-sm flex flex-col">
-          <span className="text-sm font-semibold bg-gold text-deepblue px-3 py-1 rounded-full self-start">{note.tag}</span>
+          <span className="text-sm font-semibold bg-green-300 text-deepblue px-3 py-1 rounded-full self-start">{note.tag}</span>
           <h3 className="text-xl font-bold text-deepblue pt-2">{note.title}</h3>
           <p className="text-sm flex-grow">{note.desc}</p>
           <a className="font-semibold text-deepblue hover:text-gold transition-colors self-end mt-4" href={note.href}>Read More →</a>
