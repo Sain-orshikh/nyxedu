@@ -61,13 +61,15 @@ export function extractGoogleDriveFileId(url: string): string | null {
  * @returns Proxy URL or original URL
  */
 export function createProxyUrl(url: string): string {
-  // For Google Drive files, we'll use the direct download URL
+  // For Google Drive files, use our API proxy
   if (url.includes('drive.google.com')) {
-    return convertGoogleDriveUrl(url);
+    const fileId = extractGoogleDriveFileId(url);
+    if (fileId) {
+      return `/api/drive/download?fileId=${fileId}`;
+    }
   }
   
-  // For other URLs that might have CORS issues, you can implement a proxy
-  // For now, return the original URL
+  // For other URLs, return the original URL
   return url;
 }
 

@@ -11,6 +11,7 @@ import { driveNotes } from '../../../data/driveNotes';
 import { extractGoogleDriveFileId } from '../../../utils/pdfUtils';
 import dynamic from 'next/dynamic';
 const PDFViewer = dynamic(() => import('../../../components/common/PDFViewer'), { ssr: false });
+const PDFCacheDebug = dynamic(() => import('../../../components/common/PDFCacheDebug'), { ssr: false });
 
 interface Note {
   title: string;
@@ -176,6 +177,8 @@ export default function NotePage() {
           </div>
         </div>
       </div>
+      {/* Cache Debug Component - only in development */}
+      {process.env.NODE_ENV === 'development' && <PDFCacheDebug />}
     </main>
   );
 }
