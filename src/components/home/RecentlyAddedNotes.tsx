@@ -30,7 +30,7 @@ const RecentlyAddedNotes = () => (
           <span className="text-sm font-semibold bg-green-300 text-deepblue px-3 py-1 rounded-full self-start">{note.tag}</span>
           <h3 className="text-xl font-bold text-deepblue pt-2">{note.title}</h3>
           <p className="text-sm flex-grow">{note.desc}</p>
-          <a className="font-semibold text-deepblue hover:text-gold transition-colors self-end mt-4" href={note.href}>Read More →</a>
+          <a className="font-semibold text-deepblue hover:opacity-80 transition-all duration-300 self-end mt-4" href={note.href}>Read More →</a>
         </div>
       ))}
     </div>

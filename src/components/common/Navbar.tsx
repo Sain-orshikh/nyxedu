@@ -208,7 +208,7 @@ const Navbar: React.FC = () => {
                   onClick={() => openDialog('signin')}
                   type="button"
                 >
-                  Log In
+                  Sign In
                 </button>
               </>
             )}
@@ -308,11 +308,11 @@ const Navbar: React.FC = () => {
                   Sign Up
                 </button>
                 <button
-                  className="w-4/5 py-2 rounded-2xl font-semibold text-deepblue bg-green-300 hover:opacity-80 transition-all duration-200"
+                  className="w-4/5 py-2 rounded-2xl font-semibold text-deepblue bg-green-400 hover:opacity-80 transition-all duration-200"
                   onClick={() => openDialog('signin')}
                   type="button"
                 >
-                  Log In
+                  Sign In
                 </button>
               </div>
             )}

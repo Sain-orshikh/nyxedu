@@ -29,7 +29,7 @@ const AboutUs = () => {
               ))}
             </div>
             <button
-              className="mt-2 px-6 py-2 bg-green-300 text-deepblue font-semibold rounded-lg shadow hover:opacity-80 transition-all duration-300 cursor-pointer hover:scale-105"
+              className="mt-2 px-6 py-2 bg-green-400 text-deepblue font-semibold rounded-lg shadow hover:opacity-80 transition-all duration-300 cursor-pointer"
               onClick={() => setOpen(true)}
             >
               Meet the Team

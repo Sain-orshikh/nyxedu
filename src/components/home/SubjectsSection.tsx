@@ -28,7 +28,7 @@ export default function SubjectsSection() {
         {levels.map((level) => (
           <button
             key={level.key}
-            className={`px-6 py-3 rounded-lg font-semibold border border-gray-200 text-deepblue transition-all duration-200 shadow-sm hover:shadow-lg cursor-pointer focus:outline-none focus:ring-gold ${selectedLevel === level.key ? 'bg-green-300 text-deepblue border-none' : 'bg-white'}`}
+            className={`px-6 py-3 rounded-lg font-semibold border border-gray-200 text-deepblue transition-all duration-200 shadow-sm hover:shadow-lg cursor-pointer focus:outline-none focus:ring-gold ${selectedLevel === level.key ? 'bg-green-400 text-deepblue border-none' : 'bg-white'}`}
             onClick={() => setSelectedLevel(level.key)}
           >
             <TextEffect per="word" preset="fade">{level.label}</TextEffect>
@@ -47,9 +47,16 @@ export default function SubjectsSection() {
               <a
                 key={subject.code}
                 href={`/${subject.code}`}
-                className={`block bg-white rounded-xl p-6 border transition-all duration-200 shadow-sm hover:shadow-lg text-deepblue font-semibold text-lg text-center cursor-pointer ${isChosen ? 'border-gold' : 'border-gray-200 hover:border-gold'}`}
+                className={`block bg-white rounded-xl p-6 border transition-all duration-200 shadow-sm hover:shadow-lg text-deepblue cursor-pointer ${isChosen ? 'border-gold' : 'border-gray-200 hover:border-gold'}`}
               >
-                <TextEffect per="word" preset="fade">{subject.name}</TextEffect>
+                <div className="text-center">
+                  <div className="font-semibold text-lg mb-1">
+                    <TextEffect per="word" preset="fade">{subject.name}</TextEffect>
+                  </div>
+                  <div className="text-sm text-gray-500 font-medium">
+                    {subject.code}
+                  </div>
+                </div>
               </a>
             );
           })

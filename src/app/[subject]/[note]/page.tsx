@@ -89,7 +89,7 @@ export default function NotePage() {
           <div className="lg:col-span-2 flex flex-col h-full">
             <div className=" rounded-2xl px-0 sm:px-16 flex-1 flex flex-col" style={{ backgroundColor: '#eafaf1' }}>
               {/* PDF Viewer */}
-              <div className="flex-1 bg-gray-200 rounded-xl flex items-center justify-center border-4 border-gray-300">
+              <div className="">
                 {pdfUrl ? (
                   <PDFViewer file={pdfUrl} width={800} showControls={false} />
                 ) : (

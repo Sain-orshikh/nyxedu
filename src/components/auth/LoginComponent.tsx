@@ -188,7 +188,7 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
         <button
           type="submit"
           disabled={isLoading || submitting}
-          className="w-full py-4 rounded-[12px] bg-gold text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-gold"
+          className="w-full py-4 rounded-[12px] bg-green-400 text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-400"
         >
           {submitting ? 'Please wait...' : 'Sign In'}
         </button>

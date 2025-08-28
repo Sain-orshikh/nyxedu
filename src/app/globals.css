@@ -89,6 +89,7 @@
   --color-foreground: var(--foreground);
   --deepblue: #2a3c4a;
   --gold: #f8dd6b;
+  --forest: #60F075;
   /* Optionally, set a custom property for the font */
   --font-sans: 'Lato', Arial, Helvetica, sans-serif;
 }
@@ -107,11 +108,17 @@
   .bg-gold {
     background-color: var(--gold);
   }
+  .bg-forest {
+    background-color: var(--forest);
+  }
   .text-deepblue {
     color: var(--deepblue);
   }
   .text-gold {
     color: var(--gold);
+  }
+  .text-forest {
+    color: var(--forest);
   }
   .border-deepblue {
     border-color: var(--deepblue);
@@ -119,17 +126,26 @@
   .border-gold {
     border-color: var(--gold);
   }
-  .focus\:ring-deepblue:focus {
-    box-shadow: 0 0 0 2px var(--deepblue);
-  }
-  .focus\:ring-gold:focus {
-    box-shadow: 0 0 0 3px var(--gold), 0 0 #0000;
+  .border-forest {
+    border-color: var(--forest);
   }
   .focus\:ring-deepblue:focus {
     box-shadow: 0 0 0 2px var(--deepblue);
   }
   .focus\:ring-gold:focus {
     box-shadow: 0 0 0 3px var(--gold), 0 0 #0000;
+  }
+  .focus\:ring-forest:focus {
+    box-shadow: 0 0 0 2px var(--forest);
+  }
+  .focus\:ring-deepblue:focus {
+    box-shadow: 0 0 0 2px var(--deepblue);
+  }
+  .focus\:ring-gold:focus {
+    box-shadow: 0 0 0 3px var(--gold), 0 0 #0000;
+  }
+  .focus\:ring-forest:focus {
+    box-shadow: 0 0 0 2px var(--forest);
   }
 }
 

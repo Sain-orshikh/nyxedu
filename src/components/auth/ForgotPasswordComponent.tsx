@@ -65,7 +65,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
           <div className="text-yellow-600 text-center text-sm">Check your spam folder if you don&apos;t see the email in your inbox.</div>
           <button
             type="button"
-            className="w-full py-4 rounded-[12px] bg-gold text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-gold"
+            className="w-full py-4 rounded-[12px] bg-green-400 text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-400"
             onClick={onClose}
           >
             Close
@@ -94,7 +94,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-4 rounded-[12px] bg-gold text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-gold"
+            className="w-full py-4 rounded-[12px] bg-green-400 text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-400"
           >
             {submitting ? 'Please wait...' : 'Send Reset Email'}
           </button>

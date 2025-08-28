@@ -23,7 +23,7 @@ const Hero = () => {
         </TextEffect>
       </p>
       <button
-        className="group relative px-8 cursor-pointer py-4 rounded-full bg-gradient-to-r from-green-400 to-green-900 text-white font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+        className="group relative px-8 cursor-pointer py-4 rounded-full bg-gradient-to-r from-green-400 to-green-900 text-white font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
         onClick={handleGetStarted}
         type="button"
       >

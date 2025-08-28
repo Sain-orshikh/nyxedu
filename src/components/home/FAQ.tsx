@@ -12,15 +12,15 @@ const faqs = [
   },
   {
     question: 'Are the study notes free?',
-    answer: 'Yes, the vast majority of our notes are free to access. Our mission is to make learning materials accessible to everyone. We may introduce premium features or content in the future, but our core library of peer-shared notes will always have a free-to-access tier.'
+    answer: 'Yes, all of our study notes are completely free to access and download. Our mission is to make quality education materials accessible to every student, regardless of their financial situation.'
   },
   {
     question: 'How can I contribute my own notes?',
-    answer: "We encourage students to contribute! After signing up for a free account, you will find an 'Upload Notes' option in your user dashboard. You can upload your notes in various formats (like PDF, DOCX), add a description, and tag them with the relevant subject and level. Every contribution helps the community grow!"
+    answer: 'You can contribute by contacting our team through their email. All submissions are reviewed for quality before being published, and contributors receive full credit for their work.'
   },
   {
-    question: 'How is the quality of the notes ensured?',
-    answer: "We have a peer-review system in place. When notes are uploaded, they can be rated and commented on by other students. Popular and highly-rated notes are featured more prominently. While we encourage accuracy, we always recommend using our notes as a supplementary resource alongside your official textbooks and teacher's guidance. The yellow highlight on an answer can signify a key point or important information."
+    question: 'When will AS/A Level notes be available?',
+    answer: 'AS and A Level notes will be available within the next year. Our team is actively working with educators to create comprehensive materials. We\'ll keep you updated through our website and social media channels.'
   }
 ];
 
