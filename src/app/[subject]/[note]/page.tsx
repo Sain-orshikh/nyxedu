@@ -8,6 +8,7 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import Link from 'next/link';
 import { notes as allNotes } from '../../../data/notes';
 import { driveNotes } from '../../../data/driveNotes';
+import { extractGoogleDriveFileId } from '../../../utils/pdfUtils';
 import dynamic from 'next/dynamic';
 const PDFViewer = dynamic(() => import('../../../components/common/PDFViewer'), { ssr: false });
 
@@ -89,18 +90,7 @@ export default function NotePage() {
               {/* PDF Viewer */}
               <div className="flex-1 bg-gray-200 rounded-xl flex items-center justify-center border-4 border-gray-300">
                 {pdfUrl ? (
-                  driveNote ? (
-                    <iframe
-                      id="pdf-iframe"
-                      src={pdfUrl.replace('/view?usp=drive_link', '/preview')}
-                      title={driveNote.title}
-                      className="object-contain w-full h-full p-4 sm:p-8"
-                      style={{ border: 'none', minHeight: '70vh', height: '100%' }}
-                      allow="autoplay"
-                    />
-                  ) : (
-                    <PDFViewer file={pdfUrl} />
-                  )
+                  <PDFViewer file={pdfUrl} width={800} showControls={false} />
                 ) : (
                   <span className="text-gray-500">No PDF available for this note.</span>
                 )}
@@ -125,8 +115,7 @@ export default function NotePage() {
                     <button
                       className="flex items-center gap-2 h-11 px-4 text-sm font-medium rounded-lg bg-yellow-400 hover:bg-yellow-500 hover:opacity-80 transition-all duration-200 cursor-pointer w-full justify-center text-[var(--text-primary)]"
                       onClick={() => {
-                        const fileIdMatch = driveNote.driveLink.match(/\/d\/(.*?)\//);
-                        const fileId = fileIdMatch ? fileIdMatch[1] : null;
+                        const fileId = extractGoogleDriveFileId(driveNote.driveLink);
                         if (fileId) {
                           const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
                           const a = document.createElement('a');

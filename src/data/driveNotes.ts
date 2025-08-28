@@ -16,7 +16,7 @@ export const driveNotes: DriveNote[] = [
     title: 'Biology Chapter 1',
     author: 'Khaliun.E',
     date: '2025-07-01',
-    driveLink: 'https://drive.google.com/file/d/1WITUw4tTdNAlTYn8dHdTtqrN9oW9lgdt/view?usp=drive_link',
+    driveLink: 'https://drive.google.com/file/d/1WITUw4tTdNAlTYn8dHdTtqrN9oW9lgdt/preview',
     subject: 'biology',
     subjectCode: '0610',
     chapter: '1',
