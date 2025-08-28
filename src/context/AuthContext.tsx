@@ -17,7 +17,6 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<AuthDialogType | null>(null);
-  const [setAuthUser] = useState<string | null>(null);
   const openDialog = useCallback((type: AuthDialogType) => {
     setDialogType(type);
     setIsDialogOpen(true);
