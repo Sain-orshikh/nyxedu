@@ -11,7 +11,7 @@ const AboutUs = () => {
   return (
     <section className="pt-24" id="about-us">
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-deepblue mb-10 text-center">What is NYXedu?</h2>
+        <h2 className="text-4xl font-bold text-green-900 mb-10 text-center">What is NYXedu?</h2>
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-2/3 mx-auto text-center">
             <p className="text-lg text-deepblue leading-relaxed mb-8 font-medium">
@@ -20,7 +20,7 @@ const AboutUs = () => {
             <div className="flex flex-wrap justify-center gap-8 mb-6">
               {founders.map((member) => (
                 <div key={member.name} className="flex flex-col items-center bg-white rounded-xl p-6 shadow-md w-64">
-                  <div className="w-20 h-20 rounded-full bg-gold flex items-center justify-center mb-4 border-4 border-gold">
+                  <div className="w-20 h-20 rounded-full bg-green-300 flex items-center justify-center mb-4 border-4 border-green-300">
                     <span className="text-2xl font-bold text-deepblue">{member.name[0]}</span>
                   </div>
                   <h4 className="font-bold text-lg text-deepblue">{member.name}</h4>
@@ -29,7 +29,7 @@ const AboutUs = () => {
               ))}
             </div>
             <button
-              className="mt-2 px-6 py-2 bg-gold text-deepblue font-semibold rounded-lg shadow hover:opacity-80 transition-all duration-300 cursor-pointer"
+              className="mt-2 px-6 py-2 bg-green-300 text-deepblue font-semibold rounded-lg shadow hover:opacity-80 transition-all duration-300 cursor-pointer hover:scale-105"
               onClick={() => setOpen(true)}
             >
               Meet the Team
@@ -41,7 +41,7 @@ const AboutUs = () => {
                   <div className="flex flex-col gap-4 mb-6">
                     {teamMembers.map((member) => (
                       <div key={member.name} className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-50">
-                        <div className="w-12 h-12 rounded-full bg-gold flex items-center justify-center font-bold text-deepblue">
+                        <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center font-bold text-deepblue">
                           {member.name[0]}
                         </div>
                         <div>
