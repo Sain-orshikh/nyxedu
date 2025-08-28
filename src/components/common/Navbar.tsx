@@ -10,6 +10,8 @@ import { useAuth as useAuthMutation } from '@/hooks/useAuth';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import BookmarksDialog from '@/components/common/BookmarksDialog';
 import SubjectsDialog from '@/components/common/SubjectsDialog';
+import { useSearch } from '@/hooks/useSearch';
+import { SearchItem } from '@/data/searchData';
 import toast from 'react-hot-toast';
 import { FiUser } from "react-icons/fi";
 
@@ -37,8 +39,11 @@ const Navbar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [openBookmarks, setOpenBookmarks] = useState(false);
   const [openSubjects, setOpenSubjects] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
   const { openDialog } = useAuth();
+  const { query, results, isSearching, search, clearSearch, hasResults } = useSearch();
   // Refetch authUser after login/signup/logout
   const handleAuthRefetch = () => {
     queryClient.invalidateQueries({ queryKey: ['authUser'] });
@@ -56,20 +61,40 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // Handle search input
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    search(value);
+    setShowSearchResults(value.length > 0);
+  };
+
+  // Handle search result click
+  const handleSearchResultClick = (result: SearchItem) => {
+    setShowSearchResults(false);
+    clearSearch();
+    // Navigate to the result URL if it exists
+    if (result.url) {
+      window.location.href = result.url;
+    }
+  };
+
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false);
+      }
     }
-    if (dropdownOpen) {
+    if (dropdownOpen || showSearchResults) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [dropdownOpen]);
+  }, [dropdownOpen, showSearchResults]);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-sm border-b border-gray-200">
@@ -82,17 +107,68 @@ const Navbar: React.FC = () => {
           {/* Removed Subjects link for desktop */}
         </div>
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex relative">
+          <div className="hidden md:flex relative" ref={searchRef}>
             <input
               className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-1 transition-colors text-sm"
-              placeholder="Search..."
+              placeholder="Search subjects, notes..."
               type="search"
+              value={query}
+              onChange={handleSearchChange}
+              onFocus={() => query && setShowSearchResults(true)}
             />
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
               </svg>
             </div>
+            {showSearchResults && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+                {isSearching ? (
+                  <div className="px-4 py-3 text-sm text-gray-500">Searching...</div>
+                ) : hasResults ? (
+                  <div className="py-2">
+                    {results.map((result) => (
+                      <button
+                        key={result.id}
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors"
+                        onClick={() => handleSearchResultClick(result)}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 mt-0.5">
+                            {result.type === 'subject' ? (
+                              <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                              </svg>
+                            ) : (
+                              <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-gray-900 truncate">
+                              {result.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {result.category} • {result.type}
+                            </div>
+                            {result.description && (
+                              <div className="text-xs text-gray-400 mt-1 line-clamp-2">
+                                {result.description}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : query ? (
+                  <div className="px-4 py-3 text-sm text-gray-500">
+                    No results found for &ldquo;{query}&rdquo;
+                  </div>
+                ) : null}
+              </div>
+            )}
           </div>
           <div className="hidden md:flex items-center gap-2 ml-3">
             {isLoading ? (
@@ -148,6 +224,67 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+            {/* Mobile Search */}
+            <div className="w-full px-2 mb-4" ref={searchRef}>
+              <div className="relative">
+                <input
+                  className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-1 transition-colors text-sm"
+                  placeholder="Search subjects, notes..."
+                  type="search"
+                  value={query}
+                  onChange={handleSearchChange}
+                  onFocus={() => query && setShowSearchResults(true)}
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                  </svg>
+                </div>
+              </div>
+              {showSearchResults && (
+                <div className="absolute left-2 right-2 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                  {isSearching ? (
+                    <div className="px-4 py-3 text-sm text-gray-500">Searching...</div>
+                  ) : hasResults ? (
+                    <div className="py-2">
+                      {results.slice(0, 5).map((result) => (
+                        <button
+                          key={result.id}
+                          className="w-full px-4 py-3 text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors"
+                          onClick={() => handleSearchResultClick(result)}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 mt-0.5">
+                              {result.type === 'subject' ? (
+                                <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                                </svg>
+                              ) : (
+                                <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-gray-900 truncate">
+                                {result.title}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {result.category} • {result.type}
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  ) : query ? (
+                    <div className="px-4 py-3 text-sm text-gray-500">
+                      No results found for &ldquo;{query}&rdquo;
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </div>
             {/* Removed Subjects link for mobile */}
             {isLoading ? (
               <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
