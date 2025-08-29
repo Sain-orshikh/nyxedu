@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import NoteBookmarkIcon from '../../../components/common/NoteBookmarkIcon';
 import { useParams } from 'next/navigation';
 import { Breadcrumbs, Typography } from '@mui/material';
 import Link from 'next/link';
-import { notes as allNotes } from '../../../data/notes';
 import { driveNotes } from '../../../data/driveNotes';
 import { extractGoogleDriveFileId } from '../../../utils/pdfUtils';
 import dynamic from 'next/dynamic';
@@ -49,14 +48,45 @@ export default function NotePage() {
   };
 
   const subjectKey = codeToSubject[subjectParam] || (typeof subjectParam === 'string' ? subjectParam.toLowerCase() : '');
-  const subjectNotes: Note[] = (allNotes as Record<string, Note[]>)[subjectKey] || [];
-  const noteObj = subjectNotes.find((n: Note) => typeof n.title === 'string' && typeof noteParam === 'string' && n.title.toLowerCase().includes(noteParam.toLowerCase()));
+  
+  // Get notes directly from driveNotes for this subject
+  const subjectNotes: Note[] = driveNotes
+    .filter(note => note.subject === subjectKey)
+    .map(note => ({
+      title: note.title,
+      content: note.content,
+      author: note.author,
+      date: note.date,
+      pdf: note.driveLink
+    }));
+  
+  const noteObj = subjectNotes.find((n: Note) => 
+    typeof n.title === 'string' && 
+    typeof noteParam === 'string' && 
+    n.title.toLowerCase().includes(noteParam.toLowerCase())
+  );
 
   // Try to get drive note by id (noteParam)
   // driveNote already declared above
   const pdfUrl = driveNote?.driveLink || noteObj?.pdf || '';
 
   // handlePrint removed (unused)
+
+  // Update document title with note information
+  useEffect(() => {
+    const currentNote = driveNote || noteObj;
+    const subjectDisplayName = subjectKey.charAt(0).toUpperCase() + subjectKey.slice(1);
+    
+    if (currentNote) {
+      // Create a meaningful title using note title and subject
+      const noteTitle = currentNote.title;
+      const shortDesc = currentNote.content?.substring(0, 50) +
+        (currentNote.content && currentNote.content.length > 50 ? '...' : '');
+      document.title = `${noteTitle} - ${shortDesc} | NYXedu`;
+    } else {
+      document.title = `${noteParam} - ${subjectDisplayName} | NYXedu`;
+    }
+  }, [driveNote, noteObj, subjectKey, noteParam]);
 
   return (
     <main className="pt-16 sm:pt-24 min-h-screen bg-gray-50">

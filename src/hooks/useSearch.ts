@@ -14,10 +14,8 @@ export const useSearch = (options: UseSearchOptions = {}) => {
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Extract complex expressions for dependency array
-  const keysString = options.keys?.join(',') || 'title,description,category';
-  const threshold = options.threshold ?? 0.3;
-  const limit = options.limit ?? 10;
+  // Create a stable string representation of options for dependency tracking
+  const optionsString = JSON.stringify(options);
 
   const fuse = useMemo(() => {
     const defaultOptions = {
@@ -28,7 +26,7 @@ export const useSearch = (options: UseSearchOptions = {}) => {
     };
 
     return new Fuse(searchData, defaultOptions);
-  }, [keysString, threshold, limit, options]);
+  }, [optionsString]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Perform search when query changes
   useEffect(() => {
