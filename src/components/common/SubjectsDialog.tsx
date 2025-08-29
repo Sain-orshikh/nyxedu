@@ -134,7 +134,7 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
             {!addDropdownOpen ? (
               <button
                 type="button"
-                className="w-24 rounded-xl border-2 border-green-500 text-green-500 font-bold text-sm bg-transparent hover:bg-green-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                className="w-24 h-11 rounded-lg border-2 border-green-500 text-green-500 font-bold text-sm bg-transparent hover:bg-green-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
                 onClick={() => setAddDropdownOpen(true)}
               >
                 Add
@@ -142,7 +142,7 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
             ) : (
               <button
                 type="button"
-                className="w-24 rounded-xl border-2 border-green-500 text-green-500 font-bold text-sm bg-transparent hover:bg-green-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                className="w-24 h-11 rounded-lg border-2 border-green-500 text-green-500 font-bold text-sm bg-transparent hover:bg-green-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
                 onClick={handleAddSubject}
                 disabled={selectedAdd.length === 0}
               >
@@ -151,7 +151,7 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
             )}
             <button
               type="button"
-              className={`w-24 rounded-xl border-2 border-red-500 text-red-500 font-bold text-sm bg-transparent hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer ${removeMode ? 'ring-2 ring-red-400' : ''}`}
+              className={`w-24 h-11 rounded-lg border-2 border-red-500 text-red-500 font-bold text-sm bg-transparent hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer ${removeMode ? 'ring-2 ring-red-400' : ''}`}
               onClick={() => setRemoveMode(v => !v)}
             >
               Remove
@@ -204,14 +204,14 @@ const SubjectsDialog: React.FC<SubjectsDialogProps> = ({ open, onClose }) => {
             <div className="flex gap-2 mt-2">
               <button
                 type="button"
-                className="w-24 rounded-xl border-2 py-3 border-red-500 text-red-500 font-bold text-sm bg-transparent hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                className="w-24 h-11 rounded-lg border-2 border-red-500 text-red-500 font-bold text-sm bg-transparent hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
                 onClick={handleConfirmRemove}
               >
                 Confirm
               </button>
               <button
                 type="button"
-                className="w-24 rounded-xl border-2 py-3 border-gray-400 text-gray-700 font-bold text-sm bg-transparent hover:bg-gray-400 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
+                className="w-24 h-11 rounded-lg border-2 border-gray-400 text-gray-700 font-bold text-sm bg-transparent hover:bg-gray-400 hover:text-white focus:outline-none transition-all duration-300 cursor-pointer"
                 onClick={() => { setToRemove([]); setRemoveMode(false); }}
               >
                 Cancel

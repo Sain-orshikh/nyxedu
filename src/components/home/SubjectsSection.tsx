@@ -21,7 +21,7 @@ export default function SubjectsSection() {
 
   return (
     <section className="mt-24">
-      <h2 className="text-4xl font-bold mb-6 text-green-900 text-center">
+      <h2 className="text-4xl font-bold mb-6 text-black text-center">
         <TextEffect per="word" preset="fade-in-blur">Choose Your Level</TextEffect>
       </h2>
       <div className="flex justify-center gap-4 mb-12">

@@ -48,8 +48,8 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
         style: {
           background: '#fff',
           borderRadius: '16px',
-          paddingTop: '56px',
-          paddingBottom: '56px',
+          paddingTop: '40px',
+          paddingBottom: '40px',
           maxWidth: '448px',
           paddingLeft: '64px',
           paddingRight: '64px',
@@ -65,7 +65,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
           <div className="text-yellow-600 text-center text-sm">Check your spam folder if you don&apos;t see the email in your inbox.</div>
           <button
             type="button"
-            className="w-full py-4 rounded-[12px] bg-green-400 text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="w-full py-3 px-4 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
             onClick={onClose}
           >
             Close
@@ -82,7 +82,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
               name="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-4 rounded-[12px] border border-gray-300 text-deepblue placeholder-gray-500 focus:outline-none focus:ring-1 transition-colors"
+              className="w-full px-4 py-3 rounded-[12px] border border-gray-300 text-deepblue placeholder-gray-500 focus:outline-none focus:ring-1 transition-colors"
               style={{ background: '#f8fafc', fontSize: '14px' }}
               placeholder="Email address"
               required
@@ -94,7 +94,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-4 rounded-[12px] bg-green-400 text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="w-full py-3 px-4 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
           >
             {submitting ? 'Please wait...' : 'Send Reset Email'}
           </button>
@@ -105,7 +105,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
               className="underline hover:opacity-80 transition-colors duration-200 cursor-pointer"
               style={{ fontSize: '14px', color: '#888' }}
             >
-              Back to Sign In
+              Back to Log In
             </button>
           </div>
         </form>

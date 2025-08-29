@@ -31,9 +31,9 @@ export default function SubjectsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col pt-16 sm:pt-24" style = {{backgroundColor: '#eafaf1'}}>
+    <div className="min-h-screen flex flex-col pt-16 sm:pt-24 bg-gray-50">
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-green-900 mb-8">All Subjects</h1>
+        <h1 className="text-4xl font-bold text-black mb-8">All Subjects</h1>
         {levels.map((level) => (
           <section key={level.key} className="mb-10">
             <h2 className="text-2xl font-semibold text-deepblue mb-4">{level.label}</h2>

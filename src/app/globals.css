@@ -83,7 +83,7 @@
 }
 
 :root {
-  --background: #eafaf1;
+  --background: #f9fafb;
   --foreground: #171717;
   --color-background: var(--background);
   --color-foreground: var(--foreground);

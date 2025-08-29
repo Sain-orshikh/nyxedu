@@ -11,7 +11,7 @@ const AboutUs = () => {
   return (
     <section className="pt-24" id="about-us">
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-green-900 mb-10 text-center">What is NYXedu?</h2>
+        <h2 className="text-4xl font-bold text-black mb-10 text-center">What is NYXedu?</h2>
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-2/3 mx-auto text-center">
             <p className="text-lg text-deepblue leading-relaxed mb-8 font-medium">

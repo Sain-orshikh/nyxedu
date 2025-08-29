@@ -203,7 +203,7 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
   }, [numPages, pageNumber]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-100">
+    <div className="w-full h-full flex flex-col">
       {/* Controls - only show if showControls is true */}
       {showControls && numPages && (
         <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
@@ -228,10 +228,10 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
       )}
 
       {/* PDF Content */}
-      <div className="flex-1 overflow-auto bg-gray-200 flex items-center justify-center">
+      <div className="flex-1 overflow-auto flex items-center justify-center">
         {loading && (
           <div className="text-center text-gray-500 p-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
             <p className="text-lg">Loading PDF...</p>
           </div>
         )}

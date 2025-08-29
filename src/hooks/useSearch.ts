@@ -28,7 +28,7 @@ export const useSearch = (options: UseSearchOptions = {}) => {
     };
 
     return new Fuse(searchData, defaultOptions);
-  }, [keysString, threshold, limit]);
+  }, [keysString, threshold, limit, options]);
 
   // Perform search when query changes
   useEffect(() => {

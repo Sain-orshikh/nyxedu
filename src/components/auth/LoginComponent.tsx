@@ -84,8 +84,8 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
           style: {
             background: '#fff',
             borderRadius: '16px',
-            paddingTop: '56px',
-            paddingBottom: '56px',
+            paddingTop: '40px',
+            paddingBottom: '40px',
             maxWidth: '448px',
             paddingLeft: horizontalPadding,
             paddingRight: horizontalPadding,
@@ -97,7 +97,7 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
         className="text-deepblue font-bold mb-8 text-center"
         style={{ fontSize: '28px' }}
       >
-        Sign In
+        Log In
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -114,7 +114,7 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
               name="emailOrPhone"
               value={formData.emailOrPhone}
               onChange={handleChange}
-              className="w-full px-4 py-4 rounded-[12px] border border-gray-300 text-deepblue placeholder-gray-500 focus:outline-none focus:ring-1 transition-colors"
+              className="w-full px-4 py-3 rounded-[12px] border border-gray-300 text-deepblue placeholder-gray-500 focus:outline-none focus:ring-1 transition-colors"
               style={{
                 background: '#f8fafc',
                 fontSize: '14px'
@@ -154,7 +154,7 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-4 rounded-[12px] border border-gray-300 text-deepblue placeholder-gray-500 focus:outline-none focus:ring-1 transition-colors"
+              className="w-full px-4 py-3 rounded-[12px] border border-gray-300 text-deepblue placeholder-gray-500 focus:outline-none focus:ring-1 transition-colors"
               style={{
                 background: '#f8fafc',
                 fontSize: '14px'
@@ -188,9 +188,9 @@ const SignInDialog: React.FC<SignInDialogProps> = ({
         <button
           type="submit"
           disabled={isLoading || submitting}
-          className="w-full py-4 rounded-[12px] bg-green-400 text-deepblue font-bold text-lg transition-all duration-200 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="w-full py-3 px-4 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
         >
-          {submitting ? 'Please wait...' : 'Sign In'}
+          {submitting ? 'Please wait...' : 'Log In'}
         </button>
 
         {/* Sign Up Link */}

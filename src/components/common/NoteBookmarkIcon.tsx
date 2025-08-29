@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoBookmarks, IoBookmarksOutline } from 'react-icons/io5';
 import { toast } from 'react-hot-toast';
+import { useAuthUser } from '../../hooks/useAuthUser';
 
 interface Props {
   noteId: string;
@@ -8,7 +9,7 @@ interface Props {
 
 const NoteBookmarkIcon: React.FC<Props> = ({ noteId }) => {
   const [bookmarked, setBookmarked] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { data: user } = useAuthUser();
 
   const fetchBookmarks = async () => {
     try {
@@ -21,14 +22,20 @@ const NoteBookmarkIcon: React.FC<Props> = ({ noteId }) => {
   };
 
   useEffect(() => {
-    if (noteId) fetchBookmarks();
+    if (noteId && user) fetchBookmarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteId]);
+  }, [noteId, user]);
 
   const handleBookmark = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setLoading(true);
+    
+    // Check if user is logged in
+    if (!user) {
+      toast.error('You must be logged in to bookmark notes.');
+      return;
+    }
+    
     try {
       const res = await fetch('/api/user/bookmarkUnbookmark', {
         method: 'PATCH',
@@ -45,15 +52,14 @@ const NoteBookmarkIcon: React.FC<Props> = ({ noteId }) => {
     } catch {
       toast.error('Network error. Please try again.');
     }
-    setLoading(false);
   };
 
   return (
     <span
       onClick={handleBookmark}
-      className="hover:opacity-80 transition-all duration-200"
-      style={{ cursor: loading ? 'not-allowed' : 'pointer', marginLeft: 8 }}
-      title={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+      className={`transition-all duration-200 ${user ? 'hover:opacity-80 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+      style={{ marginLeft: 8 }}
+      title={user ? (bookmarked ? 'Remove bookmark' : 'Add bookmark') : 'Login required to bookmark'}
     >
       {bookmarked ? (
         <IoBookmarks size={24} color="#222" />

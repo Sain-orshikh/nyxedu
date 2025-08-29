@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NYXedu",
+  title: "NYXedu | Educational Platform",
   description: "A comprehensive educational platform for IGCSE, AS, and A Level students. Access a wide range of study materials, past papers, and resources to excel in your exams. Built by students, for students. MAIS students.",
 };
 

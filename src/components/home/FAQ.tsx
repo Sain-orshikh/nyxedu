@@ -25,12 +25,12 @@ const faqs = [
 ];
 
 const FAQ = () => (
-  <section className="py-20" id="faq">
+  <section className="pt-20 pb-8" id="faq">
     <div className="container mx-auto px-6">
       <h2 className="text-3xl font-bold text-deepblue mb-12 text-center">Frequently Asked Questions</h2>
       <div className="max-w-3xl mx-auto">
         {faqs.map((faq, idx) => (
-          <Accordion key={idx} className="!bg-transparent !shadow-none !border-b !border-gray-200">
+          <Accordion key={idx} className="!bg-transparent !shadow-none !border-b !border-gray-300">
             <AccordionSummary expandIcon={<FiChevronDown size={24} />} className="">
               <Typography className="text-deepblue font-bold" style={{ fontSize: '1.25rem' }}>{faq.question}</Typography>
             </AccordionSummary>
