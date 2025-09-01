@@ -119,26 +119,98 @@ export const forgotPassword = async (req, res) => {
     await connectMongoDB();
     const resend = new Resend(process.env.RESEND_API_KEY);
     const { email } = req.body;
+    
     if (!email) return res.status(400).json({ error: 'Email is required' });
+    
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: 'User not found' });
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpire = Date.now() + 1000 * 60 * 60; // 1 hour
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpire = resetTokenExpire;
+    
+    // Generate 4-digit OTP
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const otpExpire = Date.now() + 1000 * 60 * 10; // 10 minutes
+    
+    user.resetPasswordOTP = otp;
+    user.resetPasswordOTPExpire = otpExpire;
     await user.save();
-    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+
     try {
         await resend.emails.send({
-            from: 'no-reply@nyxedu.com',
+            from: 'noreply@nyxedu.org', // Use your verified domain
             to: email,
-            subject: 'Reset your password',
-            html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link will expire in 1 hour.</p>`
+            subject: 'Your Password Reset Code - NyxEdu',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="color: #1e40af; margin: 0;">NyxEdu</h1>
+                    </div>
+                    <h2 style="color: #333; text-align: center;">Password Reset Code</h2>
+                    <p style="color: #666; font-size: 16px;">Hello,</p>
+                    <p style="color: #666; font-size: 16px;">You requested to reset your password. Please use the verification code below:</p>
+                    <div style="background: #f8fafc; border: 2px solid #e5e7eb; padding: 30px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; margin: 30px 0; border-radius: 8px; color: #1e40af;">
+                        ${otp}
+                    </div>
+                    <p style="color: #666; font-size: 14px; text-align: center;"><strong>This code will expire in 10 minutes.</strong></p>
+                    <p style="color: #666; font-size: 14px;">If you didn't request this password reset, please ignore this email. Your account remains secure.</p>
+                    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+                    <p style="color: #999; font-size: 12px; text-align: center;">This is an automated message from NyxEdu. Please do not reply to this email.</p>
+                </div>
+            `
         });
-        res.status(200).json({ message: 'Reset email sent' });
-    } catch {
+        res.status(200).json({ message: 'Reset code sent to your email' });
+    } catch (error) {
+        console.log('Error sending email:', error);
         res.status(500).json({ error: 'Failed to send email' });
     }
+};
+
+export const verifyResetOTP = async (req, res) => {
+    await connectMongoDB();
+    const { email, otp } = req.body;
+    
+    if (!email || !otp) {
+        return res.status(400).json({ error: 'Email and OTP are required' });
+    }
+    
+    const user = await User.findOne({ 
+        email, 
+        resetPasswordOTP: otp 
+    });
+    
+    if (!user || !user.resetPasswordOTPExpire || user.resetPasswordOTPExpire < Date.now()) {
+        return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+    
+    res.status(200).json({ message: 'OTP verified successfully' });
+};
+
+export const resetPasswordWithOTP = async (req, res) => {
+    await connectMongoDB();
+    const { email, otp, newPassword } = req.body;
+    
+    if (!email || !otp || !newPassword) {
+        return res.status(400).json({ error: 'Email, OTP, and new password are required' });
+    }
+    
+    const user = await User.findOne({ 
+        email, 
+        resetPasswordOTP: otp 
+    });
+    
+    if (!user || !user.resetPasswordOTPExpire || user.resetPasswordOTPExpire < Date.now()) {
+        return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+    
+    if (newPassword.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.resetPasswordOTP = undefined;
+    user.resetPasswordOTPExpire = undefined;
+    await user.save();
+    
+    res.status(200).json({ message: 'Password has been reset successfully' });
 };
 
 export const resetPassword = async (req, res) => {
