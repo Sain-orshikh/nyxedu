@@ -76,7 +76,6 @@ class PDFCacheManager {
             return;
           }
 
-          console.log(`📄 PDF loaded from cache: ${result.filename} (${(result.size / 1024 / 1024).toFixed(2)}MB)`);
           resolve(result.data);
         };
       });
@@ -108,7 +107,6 @@ class PDFCacheManager {
 
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
-          console.log(`💾 PDF cached: ${filename} (${(data.byteLength / 1024 / 1024).toFixed(2)}MB)`);
           resolve();
         };
       });
@@ -162,7 +160,6 @@ class PDFCacheManager {
               
               await this.deleteCachedPDF(item.fileId);
               currentSize -= item.size;
-              console.log(`🗑️ Removed old cached PDF: ${item.filename}`);
             }
           }
           
@@ -219,7 +216,6 @@ class PDFCacheManager {
 
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
-          console.log('🗑️ PDF cache cleared');
           resolve();
         };
       });

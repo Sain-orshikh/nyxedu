@@ -88,7 +88,6 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
 
   // Load PDF with caching
   const loadPDF = useCallback(async (fileUrl: string) => {
-    console.log('🔄 Loading PDF:', fileUrl);
     setLoading(true);
     setError(null);
     setNumPages(null);
@@ -110,7 +109,6 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
       
       if (isGoogleDrive) {
         const fileId = extractGoogleDriveFileId(fileUrl);
-        console.log('📁 Google Drive file ID:', fileId);
         
         if (fileId) {
           // Try to get from cache first
@@ -118,7 +116,6 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
           
           if (cachedData) {
             // Use cached data
-            console.log('🎯 Using cached PDF data');
             const blobUrl = createBlobUrlFromArrayBuffer(cachedData);
             currentBlobUrlRef.current = blobUrl;
             setPdfUrl(blobUrl);
@@ -130,7 +127,6 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
 
       // If not cached or not Google Drive, fetch from server
       const proxyUrl = createProxyUrl(fileUrl);
-      console.log('🌐 Fetching PDF from:', proxyUrl);
       abortControllerRef.current = new AbortController();
       
       const response = await fetch(proxyUrl, {
@@ -156,7 +152,6 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
       const blobUrl = createBlobUrlFromArrayBuffer(arrayBuffer);
       currentBlobUrlRef.current = blobUrl;
       setPdfUrl(blobUrl);
-      console.log('✅ PDF blob URL created, ready for rendering');
 
     } catch (error: unknown) {
       if (error instanceof Error && error.name === 'AbortError') {
@@ -191,7 +186,6 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
         setNumPages(validNumPages);
         setLoading(false);
         setError(null);
-        console.log(`📄 PDF loaded successfully: ${validNumPages} pages`);
       } else {
         setError('Invalid PDF: No pages found');
         setLoading(false);

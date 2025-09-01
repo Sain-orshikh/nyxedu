@@ -3,7 +3,6 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 import { Resend } from 'resend';
-import crypto from 'crypto';
 
 export const signup = async (req,res) => {
     await connectMongoDB();
