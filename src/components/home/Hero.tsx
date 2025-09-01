@@ -17,7 +17,7 @@ const Hero = () => {
       <h1 className="text-5xl md:text-6xl font-bold text-green-900 mb-4 leading-tight">
         <TextEffect per="word" preset="fade-in-blur">By Students, For Students</TextEffect>
       </h1>
-      <p className="text-xl mb-10 max-w-3xl mx-auto">
+      <p className="text-xl text-black mb-10 max-w-3xl mx-auto">
         <TextEffect as="span" per="word" preset="fade">
           {`All our study materials are created and shared by your fellow MAIS students. Learn from those who have walked the path before you.`}
         </TextEffect>

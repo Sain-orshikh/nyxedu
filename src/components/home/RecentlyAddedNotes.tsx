@@ -25,7 +25,7 @@ const RecentlyAddedNotes = () => {
           <div key={idx} className="note-card border border-gray-200 bg-white rounded-xl p-6 shadow-sm flex flex-col">
             <span className="text-sm font-semibold bg-green-300 text-deepblue px-3 py-1 rounded-full self-start">{note.tag}</span>
             <h3 className="text-xl font-bold text-deepblue pt-2">{note.title}</h3>
-            <p className="text-sm flex-grow">{note.desc}</p>
+            <p className="text-sm text-black flex-grow">{note.desc}</p>
             <div className="flex justify-between items-center mt-4">
               <span className="text-xs text-gray-500">By {note.author}</span>
               <a className="font-semibold text-deepblue hover:opacity-80 transition-all duration-300" href={note.href}>Read More →</a>

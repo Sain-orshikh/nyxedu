@@ -1,5 +1,8 @@
+'use client'
+
 import { teamMembers } from '@/data/teamMembers';
 import { FaInstagram, FaFacebook, FaXTwitter } from 'react-icons/fa6';
+import toast from 'react-hot-toast';
 
 const founderEmails = teamMembers.filter(m => m.role === 'Founder').map(m => m.email);
 const webDevEmail = teamMembers.find(m => m.role === 'Web Developer')?.email;
@@ -9,15 +12,15 @@ export default function Footer() {
     <footer className=" border-t border-gray-300 py-6 mt-12 bg-white">
       <div className="w-full mx-auto px-8 md:px-16 lg:px-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
         <div className="flex flex-col gap-2 w-full md:w-auto">
-          <p className="text-sm">&copy; 2025 NyxEdu. All rights reserved.</p>
+          <p className="text-sm text-black">&copy; 2025 NyxEdu. All rights reserved.</p>
           <div className="flex gap-4 mt-2">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-pink-500 transition-colors duration-200 text-2xl">
+            <a href="https://www.instagram.com/nyxedu_mongolia/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-pink-500 transition-colors duration-200 text-2xl">
               <FaInstagram />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-500 hover:text-blue-600 transition-colors duration-200 text-2xl">
+            <a href="#" onClick={(e) => { e.preventDefault(); toast.error('Our Facebook page is unavailable. Stay tuned!'); }} aria-label="Facebook" className="text-gray-500 hover:text-blue-600 transition-colors duration-200 text-2xl">
               <FaFacebook />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-gray-500 hover:text-black transition-colors duration-200 text-2xl">
+            <a href="#" onClick={(e) => { e.preventDefault(); toast.error('Our Twitter page is unavailable. Stay tuned!'); }} aria-label="Twitter" className="text-gray-500 hover:text-black transition-colors duration-200 text-2xl">
               <FaXTwitter />
             </a>
           </div>
