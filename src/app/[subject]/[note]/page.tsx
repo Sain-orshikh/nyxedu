@@ -185,11 +185,11 @@ export default function NotePage() {
         <div className="grid grid-cols-1 gap-8">
           {/* PDF Section */}
           <div className="flex flex-col h-full">
-            <div className=" rounded-2xl px-0 sm:px-16 flex-1 flex flex-col">
+            <div className="rounded-2xl flex-1 flex flex-col">
               {/* PDF Viewer */}
               <div className="flex justify-center">
                 {pdfUrl ? (
-                  <div className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl">
+                  <div className="w-full max-w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl">
                     <PDFViewer 
                       file={pdfUrl} 
                       showControls={false} 

@@ -55,8 +55,29 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string>('');
+  const [containerWidth, setContainerWidth] = useState<number>(width);
   const abortControllerRef = useRef<AbortController | null>(null);
   const currentBlobUrlRef = useRef<string>('');
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Handle responsive width
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        // Calculate responsive padding: 16px on mobile, 32px on larger screens
+        const isMobile = window.innerWidth < 640; // sm breakpoint
+        const padding = isMobile ? 16 : 32; // 8px * 2 on mobile, 16px * 2 on larger screens
+        // Add extra buffer to prevent overflow
+        const buffer = isMobile ? 8 : 16; // Extra safety margin
+        const newWidth = containerRef.current.offsetWidth - padding - buffer;
+        setContainerWidth(Math.min(newWidth, width)); // Don't exceed max width
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, [width]);
 
   // Memoize the options object to prevent unnecessary reloads
   const pdfOptions = useMemo(() => ({
@@ -203,7 +224,7 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
   }, [numPages, pageNumber]);
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div ref={containerRef} className="w-full h-full flex flex-col overflow-x-hidden">
       {/* Controls - only show if showControls is true */}
       {showControls && numPages && (
         <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
@@ -266,12 +287,12 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
             >
               {!showControls && numPages && numPages > 0 ? (
                 // Show all pages when controls are hidden
-                <div className="space-y-4 p-4">
+                <div className="space-y-4 p-2 sm:p-4 overflow-x-hidden">
                   {Array.from({ length: numPages }, (_, index) => (
                     <div key={`page_${index + 1}`} className="flex justify-center shadow-lg">
                       <Page
                         pageNumber={index + 1}
-                        width={Math.min(width, 800)}
+                        width={containerWidth}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="border border-gray-300 bg-white"
@@ -285,10 +306,10 @@ export default function PDFViewer({ file, width = 800, showControls = false }: P
               ) : (
                 // Show single page when controls are enabled
                 numPages && numPages > 0 && pageNumber <= numPages && (
-                  <div className="flex justify-center p-4">
+                  <div className="flex justify-center p-2 sm:p-4 overflow-x-hidden">
                     <Page
                       pageNumber={pageNumber}
-                      width={Math.min(width, 800)}
+                      width={containerWidth}
                       renderTextLayer={false}
                       renderAnnotationLayer={false}
                       className="border border-gray-300 bg-white shadow-lg"
