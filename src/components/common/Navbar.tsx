@@ -242,7 +242,7 @@ const Navbar: React.FC = () => {
             <div className="w-full" ref={searchRef}>
               <div className="relative">
                 <input
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm bg-gray-50"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm bg-gray-50 text-black placeholder:text-gray-400"
                   placeholder="Search subjects, notes..."
                   type="search"
                   value={query}
