@@ -20,7 +20,7 @@ const AboutUs = () => {
             <div className="flex flex-wrap justify-center gap-8 mb-6">
               {founders.map((member) => (
                 <div key={member.name} className="flex flex-col items-center bg-white rounded-xl p-6 shadow-md w-64">
-                  <div className="w-20 h-20 rounded-full bg-green-300 flex items-center justify-center mb-4 border-4 border-green-300">
+                  <div className="w-20 h-20 rounded-full bg-green-400 flex items-center justify-center mb-4">
                     <span className="text-2xl font-bold text-deepblue">{member.name[0]}</span>
                   </div>
                   <h4 className="font-bold text-lg text-deepblue">{member.name}</h4>
@@ -29,7 +29,7 @@ const AboutUs = () => {
               ))}
             </div>
             <button
-              className="mt-2 px-6 py-2 bg-green-400 text-deepblue font-semibold rounded-lg shadow hover:opacity-80 transition-all duration-300 cursor-pointer"
+              className="mt-2 px-6 py-2 bg-gradient-to-r from-green-400 to-green-500 text-deepblue font-semibold rounded-lg shadow hover:opacity-80 transition-all duration-300 cursor-pointer"
               onClick={() => setOpen(true)}
             >
               Meet the Team
@@ -41,7 +41,7 @@ const AboutUs = () => {
                   <div className="flex flex-col gap-4 mb-6">
                     {teamMembers.map((member) => (
                       <div key={member.name} className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-50">
-                        <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center font-bold text-deepblue">
+                        <div className="w-12 h-12 rounded-full bg-green-400 flex items-center justify-center font-bold text-deepblue">
                           {member.name[0]}
                         </div>
                         <div>

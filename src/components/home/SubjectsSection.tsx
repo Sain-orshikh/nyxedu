@@ -28,7 +28,7 @@ export default function SubjectsSection() {
         {levels.map((level) => (
           <button
             key={level.key}
-            className={`px-6 py-3 rounded-lg font-semibold border border-gray-200 text-deepblue transition-all duration-200 shadow-sm hover:shadow-lg cursor-pointer focus:outline-none focus:ring-gold ${selectedLevel === level.key ? 'bg-green-400 text-deepblue border-none' : 'bg-white'}`}
+            className={`px-6 py-3 rounded-lg font-semibold border border-gray-200 text-deepblue transition-all duration-200 shadow-sm hover:shadow-lg cursor-pointer focus:outline-none focus:ring-gold ${selectedLevel === level.key ? 'bg-gradient-to-r from-green-400 to-green-500 text-deepblue border-none' : 'bg-white'}`}
             onClick={() => setSelectedLevel(level.key)}
           >
             <TextEffect per="word" preset="fade">{level.label}</TextEffect>
